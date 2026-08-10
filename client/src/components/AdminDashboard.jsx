@@ -240,7 +240,7 @@ export const AdminDashboard = () => {
           </div>
 
           {/* Quick Actions & Spotlight */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between">
+          {/* <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Award className="w-5 h-5 text-amber-400" />
@@ -271,7 +271,7 @@ export const AdminDashboard = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
 
         </div>
 

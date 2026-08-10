@@ -2,7 +2,7 @@ import {useState} from 'react'
 import { AdminLeave, EmployeeLeave } from '../components';
 
 export const Leave = () => {
-   const [role, setRole] = useState('adminv'); // Mock role state
+   const [role, setRole] = useState('admin2'); // Mock role state
     return (
       <>
               {
