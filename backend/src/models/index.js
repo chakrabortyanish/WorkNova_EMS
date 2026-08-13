@@ -1,7 +1,7 @@
-import Admin from "./admin.model";
-import Employee from "./employee.model";
-import Attendance from "./attendance.model";
-import Leave from "./leave.model";
-import Payslip from "./payslip.model";
+import Admin from "./admin.model.js";
+import Employee from "./employee.model.js";
+import Attendance from "./attendance.model.js";
+import Leave from "./leave.model.js";
+import Payslip from "./payslip.model.js";
 
 export { Admin, Employee, Attendance, Leave, Payslip };
