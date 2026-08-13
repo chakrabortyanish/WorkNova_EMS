@@ -7,6 +7,9 @@ import Employee from "../models/employee.model.js";
 //! CREATE EMPLOYEE
 // ==========================================
 export const createEmployee = async (req, res) => {
+
+  let parsedAddress;
+
   try {
     const {
       fullName,
@@ -23,6 +26,8 @@ export const createEmployee = async (req, res) => {
       basicSalary,
       profileImage,
     } = req.body;
+
+    parsedAddress = JSON.parse(address);
 
     // Required field validation
     if (
@@ -43,6 +48,8 @@ export const createEmployee = async (req, res) => {
         message: "Please provide all required fields",
       });
     }
+
+    console.log("body: ",req.body)
 
     // Password validation can handle frontend
     if (password.length < 6) {
@@ -84,7 +91,7 @@ export const createEmployee = async (req, res) => {
 
       dateOfBirth,
 
-      address,
+      address: parsedAddress,
 
       department,
 
@@ -106,7 +113,7 @@ export const createEmployee = async (req, res) => {
 
       message: "Employee created successfully",
 
-      employee: employeeResponse,
+      employee,
     });
   } catch (error) {
     console.error("Create employee error:", error);
