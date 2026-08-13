@@ -23,12 +23,12 @@ const adminSchema = new mongoose.Schema(
       default: "",
     },
 
-    /* isActive: {
+    isActive: {
       type: Boolean,
       default: true,
     },
 
-    lastLogin: {
+    /* lastLogin: {
       type: Date,
     }, */
   },

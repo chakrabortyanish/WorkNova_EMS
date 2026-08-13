@@ -2,15 +2,13 @@ import mongoose from "mongoose";
 
 const employeeSchema = new mongoose.Schema(
   {
-    // Authentication
-    employeeId: {
-      type: String,
+    adminId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
       required: true,
-      unique: true,
-      trim: true,
     },
 
-    name: {
+    fullName: {
       type: String,
       required: true,
       trim: true,
@@ -27,7 +25,6 @@ const employeeSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: 6,
     },
 
     // Personal Information
@@ -39,11 +36,13 @@ const employeeSchema = new mongoose.Schema(
     phone: {
       type: String,
       trim: true,
+      required: true,
     },
 
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
+      required: true,
     },
 
     dateOfBirth: {
@@ -51,11 +50,29 @@ const employeeSchema = new mongoose.Schema(
     },
 
     address: {
-      street: String,
-      city: String,
-      state: String,
-      country: String,
-      postalCode: String,
+      city: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    
+      state: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    
+      country: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    
+      pinCode: {
+        type: String,
+        required: true,
+        trim: true,
+      },
     },
 
     // Professional Information
@@ -73,8 +90,9 @@ const employeeSchema = new mongoose.Schema(
 
     employmentType: {
       type: String,
-      enum: ["Full-Time", "Part-Time", "Contract", "Intern"],
+      enum: ["Full-Time", "Part-Time",],
       default: "Full-Time",
+      required: true,
     },
 
     joiningDate: {
@@ -82,10 +100,10 @@ const employeeSchema = new mongoose.Schema(
       required: true,
     },
 
-    location: {
+    /* location: {
       type: String,
       trim: true,
-    },
+    }, */
 
     // Employment Status
     status: {
@@ -136,17 +154,8 @@ const employeeSchema = new mongoose.Schema(
         },
       },
     },
-
-    // Account
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-
-    lastLogin: {
-      type: Date,
-    },
   },
+
   {
     timestamps: true,
   }
