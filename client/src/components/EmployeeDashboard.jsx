@@ -171,10 +171,10 @@ export const EmployeeDashboard = () => {
             {[
               { label: 'Request Leave', icon: Calendar, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
               { label: 'View Paystubs', icon: DollarSign, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-              { label: 'Submit Expense', icon: FileText, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-              { label: 'Shift Schedule', icon: Clock, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+              /* { label: 'Submit Expense', icon: FileText, color: 'text-amber-400', bg: 'bg-amber-500/10' }, 
+              { label: 'Shift Schedule', icon: Clock, color: 'text-purple-400', bg: 'bg-purple-500/10' }, */
               { label: 'My Profile', icon: User, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-              { label: 'Company Helpdesk', icon: AlertCircle, color: 'text-pink-400', bg: 'bg-pink-500/10' },
+              // { label: 'Company Helpdesk', icon: AlertCircle, color: 'text-pink-400', bg: 'bg-pink-500/10' },
             ].map((action, idx) => {
               const Icon = action.icon;
               return (
@@ -232,10 +232,10 @@ export const EmployeeDashboard = () => {
         </div>
 
         {/* --- Main Dashboard Body (Tasks + Announcements) --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="/* grid grid-cols-1 lg:grid-cols-3 gap-6 */" >
           
           {/* Interactive Task / Goal Tracker */}
-          <div className="lg:col-span-2 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-xl">
+          {/* <div className="lg:col-span-2 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-lg font-bold text-white">My Weekly Action Items</h3>
@@ -289,10 +289,10 @@ export const EmployeeDashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Announcements & Updates Feed */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between">
+        {/*   <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-white">Announcements</h3>
@@ -325,7 +325,7 @@ export const EmployeeDashboard = () => {
                 Need help or have questions? Contact HR <ChevronRight className="w-3 h-3" />
               </a>
             </div>
-          </div>
+          </div> */}
 
         </div>
 
