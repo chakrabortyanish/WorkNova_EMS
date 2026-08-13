@@ -1,2 +1,2 @@
-export const DB_NAME = "EMS_db";
+export const DB_NAME = "WorkNova";
 export const USERS_COLLECTION = "users";
