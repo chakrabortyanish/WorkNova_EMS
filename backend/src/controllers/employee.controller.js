@@ -196,7 +196,7 @@ export const employeeLogin = async (req, res) => {
 
       token,
 
-      employee: employeeResponse,
+      employee,
     });
   } catch (error) {
     console.error("Employee login error:", error);

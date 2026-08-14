@@ -7,7 +7,7 @@ dotenv.config({
 })
 
 
-const PORT = process.env.PORT || 6066;
+const PORT = process.env.PORT || 8080;
 
 connectDB()
 .then(() => {

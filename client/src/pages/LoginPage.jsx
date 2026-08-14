@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import logo from "../assets/logo.png"; // Adjust the path as necessary
 
+import axios from "axios";
+import { toast } from "react-hot-toast";
+
 export default function LoginPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -20,9 +23,21 @@ export default function LoginPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`Logging in as ${isAdmin ? "Admin" : "Employee"}:`, formData);
+    
+    try{
+       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/${isAdmin ? "admin" : "employee"}/login`, formData);
+       
+       console.log(response.data)
+       if(response.data.success){
+          toast.success(response.data.message);
+       }
+      }
+    catch(error){
+       console.error("Login failed:", error);
+       toast.error("Login failed. Please try again.");
+    }
   };
 
   return (
