@@ -129,6 +129,7 @@ export const AdminDashboard = () => {
     
     const matchesStatus = selectedStatus === 'All' || emp.status === selectedStatus;
 
+    // Return true only if both search and status match
     return matchesSearch && matchesStatus;
   });
 
