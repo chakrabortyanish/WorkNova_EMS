@@ -45,11 +45,11 @@ export const createEmployee = async (req, res) => {
       });
     }
 
-    console.log("body: ",req.body)
+    // console.log("body: ",req.body)
 
     // Password validation can handle frontend
     if (password.length < 6) {
-      return res.status(400).json({
+      return res.status(400).json({ 
         success: false,
         message: "Password must be at least 6 characters long",
       });
