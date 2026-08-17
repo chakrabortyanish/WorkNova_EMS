@@ -8,8 +8,6 @@ import Employee from "../models/employee.model.js";
 // ==========================================
 export const createEmployee = async (req, res) => {
 
-  let parsedAddress;
-
   try {
     const {
       fullName,
@@ -26,8 +24,6 @@ export const createEmployee = async (req, res) => {
       basicSalary,
       profileImage,
     } = req.body;
-
-    parsedAddress = JSON.parse(address);
 
     // Required field validation
     if (
@@ -91,7 +87,7 @@ export const createEmployee = async (req, res) => {
 
       dateOfBirth,
 
-      address: parsedAddress,
+      address,
 
       department,
 
@@ -110,10 +106,7 @@ export const createEmployee = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-
       message: "Employee created successfully",
-
-      employee,
     });
   } catch (error) {
     console.error("Create employee error:", error);

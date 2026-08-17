@@ -24,7 +24,7 @@ export const Layout = () => {
 
   // Mock User State (In a real app, grab this from AuthContext or Redux)
   // Options: 'admin' | 'employee'
-  const [role, setRole] = useState('employee');
+  const [role, setRole] = useState('admin');
 
   // Define menu items for each role
   const menuConfig = {

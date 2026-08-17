@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import { CreateEmployee } from '../components';
 
 // --- Fake / Mock Data ---
 const mockEmployeesList = [
@@ -135,7 +136,7 @@ export const Employees = () => {
   });
 
   // Handle Adding Employee
-  const handleAddEmployee = (e) => {
+ /*  const handleAddEmployee = (e) => {
     e.preventDefault();
     if (!newEmp.name || !newEmp.email) return;
 
@@ -150,7 +151,7 @@ export const Employees = () => {
     setEmployees([createdEmployee, ...employees]);
     setIsModalOpen(false);
     setNewEmp({ name: '', role: '', department: 'Engineering', type: 'Full-Time', email: '', phone: '', location: '' });
-  };
+  }; */
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
@@ -398,113 +399,7 @@ export const Employees = () => {
 
       {/* --- Add Employee Modal --- */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
-            <button 
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h2 className="text-xl font-bold text-white mb-1">Add New Employee</h2>
-            <p className="text-xs text-slate-400 mb-6">Enter details to send an onboarding invitation.</p>
-
-            <form onSubmit={handleAddEmployee} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Full Name</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="e.g. John Doe"
-                  value={newEmp.name}
-                  onChange={(e) => setNewEmp({ ...newEmp, name: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Job Title</label>
-                  <input 
-                    type="text" 
-                    required
-                    placeholder="e.g. Software Engineer"
-                    value={newEmp.role}
-                    onChange={(e) => setNewEmp({ ...newEmp, role: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Department</label>
-                  <select 
-                    value={newEmp.department}
-                    onChange={(e) => setNewEmp({ ...newEmp, department: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                  >
-                    <option value="Engineering">Engineering</option>
-                    <option value="Design & UX">Design & UX</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Human Resources">Human Resources</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Work Email</label>
-                  <input 
-                    type="email" 
-                    required
-                    placeholder="john@company.com"
-                    value={newEmp.email}
-                    onChange={(e) => setNewEmp({ ...newEmp, email: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Employment Type</label>
-                  <select 
-                    value={newEmp.type}
-                    onChange={(e) => setNewEmp({ ...newEmp, type: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                  >
-                    <option value="Full-Time">Full-Time</option>
-                    <option value="Contract">Contract</option>
-                    <option value="Remote">Remote</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Location</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. New York, NY"
-                  value={newEmp.location}
-                  onChange={(e) => setNewEmp({ ...newEmp, location: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-                <button 
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20"
-                >
-                  Create Member
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <CreateEmployee setIsModalOpen={setIsModalOpen}/>
       )}
 
     </div>

@@ -32,6 +32,8 @@ export default function LoginPage() {
        console.log(response.data)
        if(response.data.success){
           toast.success(response.data.message);
+          // Store token in localStorage or cookies
+          localStorage.setItem("ems-token", response.data.token);
        }
       }
     catch(error){
