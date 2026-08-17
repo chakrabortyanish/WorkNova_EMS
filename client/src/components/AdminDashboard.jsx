@@ -188,12 +188,7 @@ export const AdminDashboard = () => {
 
                 <div className="mt-4 flex items-baseline justify-between">
                   <span className="text-3xl font-bold tracking-tight text-white">{stat.value}</span>
-                  <span className={`inline-flex items-center text-xs font-semibold px-2 py-1 rounded-md ${
-                    stat.isPositive ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10'
-                  }`}>
-                    {stat.isPositive ? <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" /> : <ArrowDownRight className="w-3.5 h-3.5 mr-0.5" />}
-                    {stat.change}
-                  </span>
+                  
                 </div>
               </div>
             );
