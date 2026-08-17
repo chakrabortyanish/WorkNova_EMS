@@ -200,10 +200,10 @@ export const AdminDashboard = () => {
         </div>
 
         {/* --- Middle Analytics & Quick Overview Section --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
           
           {/* Department Breakdown */}
-          <div className="lg:col-span-2 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-sm">
+          <div className="lg:col-span-2 w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
