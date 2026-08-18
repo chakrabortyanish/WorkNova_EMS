@@ -173,6 +173,7 @@ export const employeeLogin = async (req, res) => {
       {
         employeeId: employee._id,
         fullName: employee.fullName,
+        role: "employee",
       },
 
       process.env.JWT_SECRET,

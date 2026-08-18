@@ -178,6 +178,8 @@ export const adminLogin = async (req, res) => {
     const token = jwt.sign(
       {
         adminId: admin._id,
+        fullName: admin.name,
+        role: "admin",
       },
       process.env.JWT_SECRET,
       {
