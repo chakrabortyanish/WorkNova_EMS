@@ -23,14 +23,14 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={<Layout />}>
-        <Route index path="/dashboard" element={<Dashboard />} />
-        <Route path="/payslips" element={<PaySlips />} />
-        {/* <Route path="/profile" element={<Profile />} /> */}
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/leave" element={<Leave />} />
-        <Route path="/employees" element={<Employees />} />
-        <Route path="/attendance" element={<Attendance />} />
+
+      <Route path="/dashboard" element={<Layout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="employees" element={<Employees />} />
+        <Route path="attendance" element={<Attendance />} />
+        <Route path="leave" element={<Leave />} />
+        <Route path="payslips" element={<PaySlips />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </>,
   ),

@@ -11,10 +11,15 @@ import {
 } from "lucide-react";
 import logo from "../assets/logo.png"; // Adjust the path as necessary
 
+import {useNavigate} from "react-router-dom";
+
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
+
+  const navigate = useNavigate();
+  
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -34,6 +39,9 @@ export default function LoginPage() {
           toast.success(response.data.message);
           // Store token in localStorage or cookies
           localStorage.setItem("ems-token", response.data.token);
+
+          // Redirect based on user type
+         navigate("/dashboard");
        }
       }
     catch(error){
