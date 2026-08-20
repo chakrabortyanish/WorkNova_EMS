@@ -12,6 +12,7 @@ import {
 import logo from "../assets/logo.png"; // Adjust the path as necessary
 
 import {useNavigate} from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -19,6 +20,9 @@ import { toast } from "react-hot-toast";
 export default function LoginPage() {
 
   const navigate = useNavigate();
+
+  //use auth context
+  const { login } = useAuth();
   
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -38,10 +42,12 @@ export default function LoginPage() {
        if(response.data.success){
           toast.success(response.data.message);
           // Store token in localStorage or cookies
-          localStorage.setItem("ems-token", response.data.token);
+          login(response.data.token);
 
           // Redirect based on user type
-         navigate("/dashboard");
+         setTimeout(() => {
+            navigate("/dashboard");
+         }, 1500);
        }
       }
     catch(error){

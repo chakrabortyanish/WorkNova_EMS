@@ -22,7 +22,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<LoginPage />} />
 
       <Route path="/dashboard" element={<Layout />}>
         <Route index element={<Dashboard />} />

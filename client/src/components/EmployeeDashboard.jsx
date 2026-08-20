@@ -16,6 +16,8 @@ import {
   Square
 } from 'lucide-react';
 
+import { useNavigate } from 'react-router-dom';
+
 // --- Fake / Mock Data for Employee ---
 const mockEmployeeInfo = {
   name: 'Alex Rivera',
@@ -60,6 +62,8 @@ const mockAnnouncements = [
 ];
 
 export const EmployeeDashboard = () => {
+  const navigate = useNavigate();
+
   const [isPunchedIn, setIsPunchedIn] = useState(true);
   const [tasks, setTasks] = useState(mockWeeklyTasks);
 
@@ -106,7 +110,7 @@ export const EmployeeDashboard = () => {
               <span className="absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full" />
             </button>
 
-            <button className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white px-4 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-600/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
+            <button onClick={()=> navigate("/dashboard/leave")} className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white px-4 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-600/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
               <Calendar className="w-4 h-4" />
               <span>Apply for Leave</span>
             </button>

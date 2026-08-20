@@ -17,14 +17,22 @@ import {
 } from "lucide-react";
 
 import logo from "../assets/logo.png";
+import { jwtDecode } from "jwt-decode";
+
+import {useAuth} from "../context/AuthContext.jsx";
 
 export const Layout = () => {
+  const {user, logout} = useAuth();
+
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
 
+   if (!localStorage.getItem("ems-token") && !user) {
+    navigate("/");
+  }
+
   // Mock User State (In a real app, grab this from AuthContext or Redux)
   // Options: 'admin' | 'employee'
-  const [role, setRole] = useState("admin");
 
   // Define menu items for each role
   const menuConfig = {
@@ -45,12 +53,9 @@ export const Layout = () => {
     ],
   };
 
-  const currentNavItems = menuConfig[role] || menuConfig.employee;
+  const currentNavItems = menuConfig[user?.role] || menuConfig.employee;
 
-  const handleLogout = () => {
-    // Clear tokens/auth state here
-    navigate("/login");
-  };
+ 
 
   return (
     <div className="flex h-screen bg-slate-900 text-slate-100 font-sans antialiased overflow-hidden">
@@ -108,23 +113,23 @@ export const Layout = () => {
           <div className="flex items-center gap-3">
             <div className="relative">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white text-sm shadow-md shadow-indigo-500/20">
-                {role === "admin" ? "AD" : "EM"}
+                {user?.role === "admin" ? "AD" : "EM"}
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-slate-100 truncate">
-                {role === "admin" ? "Alex Morgan" : "Sarah Connor"}
+              <p className="capitalize text-sm font-semibold text-slate-100 truncate">
+                {user?.fullName}
               </p>
               <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
-                {role === "admin" ? (
+                {user?.role === "admin" ? (
                   <Shield size={13} className="text-indigo-400" />
                 ) : (
                   <UserCheck size={13} className="text-emerald-400" />
                 )}
                 <span className="capitalize font-medium text-slate-300">
-                  {role} Account
+                  {user?.role} Account
                 </span>
               </div>
             </div>
@@ -183,8 +188,8 @@ export const Layout = () => {
         {/* Logout Section */}
         <div className="relative z-10 p-4 border-t border-slate-800/60 bg-slate-950/60 backdrop-blur-md">
           <button
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20 transition-all duration-200 shadow-sm"
+            onClick={()=> logout()}
+            className="w-full cursor-pointer flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20 transition-all duration-200 shadow-sm"
           >
             <LogOut size={18} />
             <span>Log out</span>
