@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Clock, 
   Calendar, 
@@ -15,6 +15,8 @@ import {
   Play,
   Square
 } from 'lucide-react';
+
+import axios from 'axios';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -35,47 +37,35 @@ const mockLeaveBalances = [
   { type: 'Personal Leave', used: 1, total: 5, color: 'from-purple-500 to-pink-600', barColor: 'bg-purple-500' },
 ];
 
-const mockWeeklyTasks = [
-  { id: 1, title: 'Design System Figma Component Update', project: 'Design System', dueDate: 'Today', completed: false, priority: 'High' },
-  { id: 2, title: 'Review Mobile Onboarding Flow Wireframes', project: 'EMS Mobile', dueDate: 'Tomorrow', completed: true, priority: 'Medium' },
-  { id: 3, title: 'Conduct UX Research Sprint with Frontend Team', project: 'Admin Dashboard', dueDate: 'Aug 10', completed: false, priority: 'High' },
-  { id: 4, title: 'Submit Monthly Timesheet', project: 'HR Admin', dueDate: 'Aug 12', completed: false, priority: 'Low' }
-];
 
-const mockAnnouncements = [
-  {
-    id: 1,
-    title: 'Q3 All-Hands Townhall Meeting Scheduled',
-    author: 'HR Department',
-    date: '2 hours ago',
-    tag: 'Event',
-    color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20'
-  },
-  {
-    id: 2,
-    title: 'New Health Insurance Benefits Policy Update',
-    author: 'Benefits Team',
-    date: 'Yesterday',
-    tag: 'Policy',
-    color: 'text-amber-400 bg-amber-500/10 border-amber-500/20'
-  }
-];
 
 export const EmployeeDashboard = () => {
   const navigate = useNavigate();
 
   const [isPunchedIn, setIsPunchedIn] = useState(true);
-  const [tasks, setTasks] = useState(mockWeeklyTasks);
+
+  const [employeeInfo, setEmployeeInfo] = useState();
+
+  const fetchProfile = async () => {
+    try {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+          },
+        });
+        if(res.data.success){
+          setEmployeeInfo(res.data.employee);
+        }
+    } catch (error) { 
+        console.error('Error fetching employee profile:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   // Toggle task completion state
-  const toggleTask = (taskId) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
-
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -85,20 +75,20 @@ export const EmployeeDashboard = () => {
           <div className="flex items-center gap-4">
             <img 
               src={mockEmployeeInfo.avatar} 
-              alt={mockEmployeeInfo.name} 
+              alt={employeeInfo?.fullName} 
               className="w-14 h-14 rounded-2xl object-cover ring-2 ring-indigo-500/40 p-0.5 shadow-lg shadow-indigo-500/10"
             />
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
-                  Welcome back, {mockEmployeeInfo.name.split(' ')[0]}!
+                <h1 className="capitalize text-2xl md:text-3xl font-extrabold tracking-tight text-white">
+                  Welcome back, {employeeInfo?.fullName.split(' ')[0]}!
                 </h1>
                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   <Sparkles className="w-3 h-3" /> Employee Portal
                 </span>
               </div>
               <p className="text-slate-400 text-sm mt-0.5 flex items-center gap-2">
-                <span>{mockEmployeeInfo.role}</span> • <span className="text-indigo-400">{mockEmployeeInfo.department}</span>
+                <span>{employeeInfo?.designation}</span> • <span className="text-indigo-400">{employeeInfo?.department}</span>
               </p>
             </div>
           </div>
@@ -139,7 +129,7 @@ export const EmployeeDashboard = () => {
 
               <div className="text-center my-4">
                 <div className="text-4xl font-black text-white tracking-wider font-mono">05:42:18</div>
-                <p className="text-xs text-slate-400 mt-1">Shift Hours: {mockEmployeeInfo.shift}</p>
+                <p className="text-xs text-slate-400 mt-1">Shift Hours: {employeeInfo?.shift}</p>
               </div>
             </div>
 
