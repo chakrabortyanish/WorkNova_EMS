@@ -27,7 +27,7 @@ export const Layout = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
 
-   if (!localStorage.getItem("ems-token") && !user) {
+   if (!localStorage.getItem("ems-token")) {
     navigate("/");
   }
 
