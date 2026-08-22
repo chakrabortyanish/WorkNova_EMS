@@ -2,4 +2,6 @@ import employeeRoutes from "./employee.routes.js";
 
 import adminRoutes from "./admin.routes.js"
 
-export { employeeRoutes, adminRoutes };
+import {attendanceRoutes} from "./attendance.routes.js";
+
+export { employeeRoutes, adminRoutes, attendanceRoutes };
