@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import Employee from "../models/employee.model.js";
 
 const employeeAuth = async (req, res, next) => {
+  console.log("Employee authentication middleware triggered");
   try {
     let token;
 

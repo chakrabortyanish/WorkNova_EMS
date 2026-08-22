@@ -37,13 +37,8 @@ const attendanceSchema = new mongoose.Schema(
 );
 
 attendanceSchema.index(
-  {
-    employee: 1,
-    date: 1,
-  },
-  {
-    unique: true,
-  },
+  { employeeId: 1, date: 1 },
+  { unique: true }
 );
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);
