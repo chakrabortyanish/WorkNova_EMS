@@ -51,7 +51,7 @@ export const checkIn = async (req, res) => {
     const checkInTime = new Date();
 
     // Example office start time = 9:00 AM
-    const officeStartHour = 10;
+    const officeStartHour = 18;
     const officeStartMinute = 0;
 
     const officeStart = new Date();
@@ -197,7 +197,7 @@ export const getMyAttendance = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      count: attendance.length,
+      // count: attendance.length,
       attendance,
     });
   } catch (error) {
