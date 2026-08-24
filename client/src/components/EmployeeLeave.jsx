@@ -129,7 +129,7 @@ export const EmployeeLeave = () => {
         </div>
 
         {/* --- Apply Form + Request History Grid --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col gap-5">
           
           {/* Apply Leave Card */}
           <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-xl h-fit">
