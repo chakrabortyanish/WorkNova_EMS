@@ -30,7 +30,7 @@ const leaveBalances = [
 ];
 
 export const EmployeeLeave = () => {
-  const [requests, setRequests] = useState([]);
+  const [leaves, setLeaves] = useState([]);
   const [formData, setFormData] = useState({
     type: "Paid Time Off (PTO)",
     startDate: "",
@@ -50,7 +50,7 @@ export const EmployeeLeave = () => {
         },
       );
 
-      setRequests(response.data.leaves || []);
+      setLeaves(response.data.leaves || []);
     } catch (error) {
       console.error("Failed to fetch leave requests:", error);
 
@@ -60,9 +60,9 @@ export const EmployeeLeave = () => {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     fetchMyLeaves();
-  }, [requests]);
+  }, [leaves]);
 
   // Calculate days between dates
   const calculateDays = (start, end) => {
@@ -205,10 +205,10 @@ export const EmployeeLeave = () => {
                   }
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
                 >
-                  <option value="" selected opcaity={0.4}>Select Leave</option>
-                  <option value="Paid Time Off">
-                    Paid Time Off (PTO)
+                  <option value="" selected opcaity={0.4}>
+                    Select Leave
                   </option>
+                  <option value="Paid Time Off">Paid Time Off (PTO)</option>
                   <option value="Sick Leave">Sick Leave</option>
                   <option value="Personal Leave">Personal Leave</option>
                 </select>
@@ -293,54 +293,55 @@ export const EmployeeLeave = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60 text-sm">
-                    {requests.length > 0 ? (
-                      requests.map((req) => (
+                    {leaves.length > 0 ? (
+                      leaves.map((leave) => (
                         <tr
-                          key={req.id}
+                          key={leave.id}
                           className="hover:bg-slate-800/40 transition-colors"
                         >
                           <td className="py-4 px-6 text-xs text-slate-200 font-medium">
                             <span className="px-2.5 py-1 rounded-md bg-slate-950 border border-slate-800">
-                              {req.type}
+                              {leave.leaveType}
                             </span>
                           </td>
 
                           <td className="py-4 px-6 text-xs">
                             <div className="text-slate-200 font-medium">
-                              {req.startDate} - {req.endDate}
+                              {new Date(leave.startDate).toLocaleDateString()} -{" "}
+                              {new Date(leave.endDate).toLocaleDateString()}
                             </div>
                             <div className="text-slate-500 text-[11px] mt-0.5">
-                              {req.days} Day(s)
+                              {leave.totalDays} Day(s)
                             </div>
                           </td>
 
                           <td
                             className="py-4 px-6 text-xs text-slate-400 max-w-xs truncate"
-                            title={req.reason}
+                            title={leave.reason}
                           >
-                            "{req.reason}"
+                            "{leave.reason}"
                           </td>
 
                           <td className="py-4 px-6">
                             <span
                               className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${
-                                req.status === "Approved"
+                                leave.status === "Approved"
                                   ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                                  : req.status === "Rejected"
+                                  : leave.status === "Rejected"
                                     ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
                                     : "bg-amber-500/10 text-amber-400 border-amber-500/20"
                               }`}
                             >
                               <span
                                 className={`w-1.5 h-1.5 rounded-full ${
-                                  req.status === "Approved"
+                                  leave.status === "Approved"
                                     ? "bg-emerald-400"
-                                    : req.status === "Rejected"
+                                    : leave.status === "Rejected"
                                       ? "bg-rose-400"
                                       : "bg-amber-400"
                                 }`}
                               />
-                              {req.status}
+                              {leave.status}
                             </span>
                           </td>
                         </tr>
