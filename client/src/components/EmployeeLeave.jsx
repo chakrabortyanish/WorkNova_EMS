@@ -64,21 +64,6 @@ export const EmployeeLeave = () => {
     fetchMyLeaves();
   }, [leaves]);
 
-  // Calculate days between dates
-  const calculateDays = (start, end) => {
-    if (!start || !end) return 0;
-
-    const s = new Date(start);
-    const e = new Date(end);
-
-    s.setHours(0, 0, 0, 0);
-    e.setHours(0, 0, 0, 0);
-
-    const diff = (e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24);
-
-    return diff + 1;
-  };
-
   // Submit Leave Application
   const handleSubmit = async (e) => {
     e.preventDefault();
