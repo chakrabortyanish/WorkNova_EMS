@@ -1,3 +1,4 @@
+
 import mongoose from "mongoose";
 
 const leaveSchema = new mongoose.Schema(
@@ -46,11 +47,11 @@ const leaveSchema = new mongoose.Schema(
         "Pending",
         "Approved",
         "Rejected",
+        "Cancelled",
       ],
       default: "Pending",
     },
 
-    // Admin who approved/rejected the request
     reviewedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
@@ -74,12 +75,8 @@ const leaveSchema = new mongoose.Schema(
 );
 
 leaveSchema.index({
-  employee: 1,
+  employeeId: 1,
   startDate: -1,
-});
-
-leaveSchema.index({
-  status: 1,
 });
 
 export default mongoose.model("Leave", leaveSchema);
