@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //! for employee controllers
 import {
   createEmployee,
@@ -7,14 +6,7 @@ import {
 } from "./employee.controller.js";
 
 export { createEmployee, employeeLogin, getEmployeeProfile };
-=======
-//! for employee routes
-import { createEmployee, employeeLogin, getEmployeeProfile } from "./employee.controller.js";
->>>>>>> leave
 
-export { createEmployee, employeeLogin, getEmployeeProfile }; 
-
-<<<<<<< HEAD
 //! for attendance controllers
 import {
   checkIn,
@@ -37,7 +29,6 @@ export {
   getAttendanceReport,
   updateAttendanceStatus,
 };
-=======
 
 //! for leave routes
 import {
@@ -55,4 +46,3 @@ import {
 } from "../controllers/leave.controller.js";
 
 export { applyLeave, getMyLeaves, getLeaveById, cancelLeave, getAllLeaves, getPendingLeaves, getEmployeeLeaves, approveLeave, rejectLeave };
->>>>>>> leave
