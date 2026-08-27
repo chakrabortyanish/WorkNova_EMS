@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
-  Calendar, 
   Check, 
   X, 
-  Clock, 
-  Search, 
-  Filter, 
-  CheckCircle2, 
-  XCircle, 
-  AlertCircle 
+  Search,
 } from 'lucide-react';
+
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 // --- Mock Data ---
 const initialLeaveRequests = [
@@ -94,6 +91,40 @@ export const AdminLeave = () => {
 
     return matchesSearch && matchesStatus;
   });
+
+  const fetchLeaveRequests = async () => {
+  try {
+    const token = localStorage.getItem("ems-token");
+
+    if (!token) {
+      console.error("No authentication token found");
+      return;
+    }
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/all-leaves`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    console.log("Leave response:", response.data);
+
+    setRequests(response.data.leaves || []);
+  } catch (error) {
+    console.error(
+      "Failed to fetch leave requests:",
+      error.response?.data || error
+    );
+  }
+};
+
+useEffect(() => {
+  fetchLeaveRequests();
+}, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">

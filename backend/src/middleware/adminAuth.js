@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import {Admin} from "../models/index.js";
 
 const adminAuth = async (req, res, next) => {
+  console.log("Admin authentication middleware triggered");
   try {
     let token;
 

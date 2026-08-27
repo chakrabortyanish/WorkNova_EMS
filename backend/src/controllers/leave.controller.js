@@ -313,6 +313,7 @@ export const cancelLeave = async (req, res) => {
 // =====================================================
 
 export const getAllLeaves = async (req, res) => {
+  console.log("getAllLeaves");
   try {
     const leaves = await Leave.find()
       .populate(

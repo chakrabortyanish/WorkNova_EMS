@@ -59,7 +59,7 @@ router.patch(
 
 // Get all leave requests
 router.get(
-  "/all",
+  "/all-leaves",
   adminAuth,
   getAllLeaves
 );
