@@ -515,13 +515,13 @@ export const rejectLeave = async (req, res) => {
       });
     }
 
-    if (!rejectionReason) {
+   /*  if (!rejectionReason) {
       return res.status(400).json({
         success: false,
         message:
           "Rejection reason is required",
       });
-    }
+    } */
 
     const leave = await Leave.findById(id);
 
@@ -543,8 +543,8 @@ export const rejectLeave = async (req, res) => {
     leave.status = "Rejected";
     leave.reviewedBy = adminId;
     leave.reviewedAt = new Date();
-    leave.rejectionReason =
-      rejectionReason.trim();
+    /* leave.rejectionReason =
+      rejectionReason.trim(); */
 
     await leave.save();
 

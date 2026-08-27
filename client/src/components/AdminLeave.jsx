@@ -69,7 +69,7 @@ const initialLeaveRequests = [
 ];
 
 export const AdminLeave = () => {
-  const [requests, setRequests] = useState(initialLeaveRequests);
+  const [requests, setRequests] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
@@ -80,8 +80,12 @@ export const AdminLeave = () => {
     );
   };
 
+  /* const handleStatus = ()=>{
+
+  } */
+
   // Filter requests
-  const filteredRequests = requests.filter(req => {
+ /*  const filteredRequests = requests.filter(req => {
     const matchesSearch =
       req.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
       req.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -90,7 +94,7 @@ export const AdminLeave = () => {
     const matchesStatus = statusFilter === 'All' || req.status === statusFilter;
 
     return matchesSearch && matchesStatus;
-  });
+  }); */
 
   const fetchLeaveRequests = async () => {
   try {
@@ -125,6 +129,80 @@ export const AdminLeave = () => {
 useEffect(() => {
   fetchLeaveRequests();
 }, []);
+
+//! Approve Leave
+const handleApprove = async (leaveId) => {
+  try {
+    const token = localStorage.getItem("ems-token");
+
+    if (!token) {
+      console.error("No authentication token found");
+      return;
+    }
+
+    const response = await axios.patch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/${leaveId}/approve`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Leave approved:", response.data);
+
+    if(response.data.success){
+      toast.success(response.data.message);
+    }
+
+    // Refresh leave list
+    fetchLeaveRequests();
+
+  } catch (error) {
+    console.error(
+      "Approve leave error:",
+      error.response?.data || error.message
+    );
+  }
+};
+
+//! Reject Leave
+const handleReject = async (leaveId) => {
+  try {
+    const token = localStorage.getItem("ems-token");
+
+    if (!token) {
+      console.error("No authentication token found");
+      return;
+    }
+
+    const response = await axios.patch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/${leaveId}/reject`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Leave rejected:", response.data);
+
+    if(response.data.success){
+      toast.success(response.data.message);
+    }
+
+    // Refresh leave list
+    fetchLeaveRequests();
+
+  } catch (error) {
+    console.error(
+      "Reject leave error:",
+      error.response?.data || error.message
+    );
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
@@ -188,44 +266,44 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-sm">
-                {filteredRequests.length > 0 ? (
-                  filteredRequests.map((req) => (
+                {requests.length > 0 ? (
+                  requests.map((req) => (
                     <tr key={req.id} className="hover:bg-slate-800/40 transition-colors">
                       {/* Employee info */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-2">
                         <div className="flex items-center gap-3">
                           <img 
                             src={req.avatar} 
-                            alt={req.employee} 
+                            alt={req.employeeId.fullName} 
                             className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800"
                           />
                           <div>
-                            <div className="font-semibold text-white">{req.employee}</div>
-                            <div className="text-xs text-slate-400">{req.department}</div>
+                            <div className="font-semibold text-[12px] text-white">{req.employeeId.fullName}</div>
+                            <div className="text-xs text-slate-400">{req.employeeId.department}</div>
                           </div>
                         </div>
                       </td>
 
                       {/* Leave Type */}
-                      <td className="py-4 px-6 text-xs text-slate-200 font-medium">
+                      <td className="py-4 px-2 text-[10px] text-slate-200 font-medium">
                         <span className="px-2.5 py-1 rounded-md bg-slate-950 border border-slate-800">
-                          {req.type}
+                          {req.leaveType}
                         </span>
                       </td>
 
                       {/* Duration */}
-                      <td className="py-4 px-6 text-xs">
-                        <div className="text-slate-200 font-medium">{req.startDate} - {req.endDate}</div>
-                        <div className="text-slate-400 text-[11px] mt-0.5">{req.days} Day(s)</div>
+                      <td className="py-4 px-2 text-xs">
+                        <div className="text-slate-200 text-[10px] font-medium">{new Date(req.startDate).toLocaleDateString()} - {new Date(req.endDate).toLocaleDateString()}</div>
+                        <div className="text-slate-400 text-[11px] mt-0.5">{req.totalDays} Day(s)</div>
                       </td>
 
                       {/* Reason */}
-                      <td className="py-4 px-6 text-xs text-slate-300 max-w-xs truncate" title={req.reason}>
+                      <td className="py-4 px-2 text-[12px] text-slate-300 max-w-xs truncate" title={req.reason}>
                         "{req.reason}"
                       </td>
 
                       {/* Status */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-2">
                         <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${
                           req.status === 'Approved' 
                             ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
@@ -241,19 +319,19 @@ useEffect(() => {
                       </td>
 
                       {/* Actions */}
-                      <td className="py-4 px-6 text-right">
+                      <td className="py-4 px-2 text-right">
                         {req.status === 'Pending' ? (
                           <div className="flex items-center justify-end gap-2">
                             <button 
-                              onClick={() => handleStatusChange(req.id, 'Approved')}
-                              className="p-1.5 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white rounded-lg transition-colors border border-emerald-500/30"
+                              onClick={() => handleApprove(req._id)}
+                              className="cursor-pointer p-1.5 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white rounded-lg transition-colors border border-emerald-500/30"
                               title="Approve"
                             >
                               <Check className="w-4 h-4" />
                             </button>
                             <button 
-                              onClick={() => handleStatusChange(req.id, 'Rejected')}
-                              className="p-1.5 bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white rounded-lg transition-colors border border-rose-500/30"
+                              onClick={() => handleReject(req._id)}
+                              className="cursor-pointer p-1.5 bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white rounded-lg transition-colors border border-rose-500/30"
                               title="Reject"
                             >
                               <X className="w-4 h-4" />

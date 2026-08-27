@@ -21,39 +21,6 @@ const router = express.Router();
 
 
 // =====================================================
-//! EMPLOYEE ROUTES
-// =====================================================
-
-// Apply for leave
-router.post(
-  "/apply",
-  employeeAuth,
-  applyLeave
-);
-
-// Get my leave requests
-router.get(
-  "/my-leaves",
-  employeeAuth,
-  getMyLeaves
-);
-
-// Get single leave
-router.get(
-  "/:id",
-  employeeAuth,
-  getLeaveById
-);
-
-// Cancel pending leave
-router.patch(
-  "/:id/cancel",
-  employeeAuth,
-  cancelLeave
-);
-
-
-// =====================================================
 //! ADMIN ROUTES
 // =====================================================
 
@@ -90,6 +57,39 @@ router.patch(
   "/:id/reject",
   adminAuth,
   rejectLeave
+);
+
+
+// =====================================================
+//! EMPLOYEE ROUTES
+// =====================================================
+
+// Apply for leave
+router.post(
+  "/apply",
+  employeeAuth,
+  applyLeave
+);
+
+// Get my leave requests
+router.get(
+  "/my-leaves",
+  employeeAuth,
+  getMyLeaves
+);
+
+// Cancel pending leave
+router.patch(
+  "/:id/cancel",
+  employeeAuth,
+  cancelLeave
+);
+
+// Get single leave (keep this last because it matches any path segment)
+router.get(
+  "/:id",
+  employeeAuth,
+  getLeaveById
 );
 
 export default router;
