@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { 
-  Check, 
-  X, 
-  Search,
-} from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { Check, X, Search, User } from "lucide-react";
 
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -11,72 +7,76 @@ import { toast } from "react-hot-toast";
 // --- Mock Data ---
 const initialLeaveRequests = [
   {
-    id: 'LR-101',
-    employee: 'Sarah Jenkins',
-    role: 'Senior Frontend Engineer',
-    department: 'Engineering',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-    type: 'Sick Leave',
-    startDate: 'Aug 10, 2026',
-    endDate: 'Aug 12, 2026',
+    id: "LR-101",
+    employee: "Sarah Jenkins",
+    role: "Senior Frontend Engineer",
+    department: "Engineering",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
+    type: "Sick Leave",
+    startDate: "Aug 10, 2026",
+    endDate: "Aug 12, 2026",
     days: 3,
-    reason: 'Medical treatment and rest prescribed by doctor.',
-    appliedDate: 'Aug 04, 2026',
-    status: 'Pending'
+    reason: "Medical treatment and rest prescribed by doctor.",
+    appliedDate: "Aug 04, 2026",
+    status: "Pending",
   },
   {
-    id: 'LR-102',
-    employee: 'Michael Chen',
-    role: 'Product Designer',
-    department: 'Design & UX',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-    type: 'Casual / PTO',
-    startDate: 'Aug 15, 2026',
-    endDate: 'Aug 18, 2026',
+    id: "LR-102",
+    employee: "Michael Chen",
+    role: "Product Designer",
+    department: "Design & UX",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+    type: "Casual / PTO",
+    startDate: "Aug 15, 2026",
+    endDate: "Aug 18, 2026",
     days: 4,
-    reason: 'Family vacation trip.',
-    appliedDate: 'Aug 02, 2026',
-    status: 'Pending'
+    reason: "Family vacation trip.",
+    appliedDate: "Aug 02, 2026",
+    status: "Pending",
   },
   {
-    id: 'LR-103',
-    employee: 'David Kim',
-    role: 'DevOps Specialist',
-    department: 'Engineering',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-    type: 'Personal Leave',
-    startDate: 'Aug 08, 2026',
-    endDate: 'Aug 08, 2026',
+    id: "LR-103",
+    employee: "David Kim",
+    role: "DevOps Specialist",
+    department: "Engineering",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
+    type: "Personal Leave",
+    startDate: "Aug 08, 2026",
+    endDate: "Aug 08, 2026",
     days: 1,
-    reason: 'Personal urgent work at home.',
-    appliedDate: 'Aug 01, 2026',
-    status: 'Approved'
+    reason: "Personal urgent work at home.",
+    appliedDate: "Aug 01, 2026",
+    status: "Approved",
   },
   {
-    id: 'LR-104',
-    employee: 'Jessica Taylor',
-    role: 'HR Manager',
-    department: 'Human Resources',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150',
-    type: 'Casual / PTO',
-    startDate: 'Aug 20, 2026',
-    endDate: 'Aug 22, 2026',
+    id: "LR-104",
+    employee: "Jessica Taylor",
+    role: "HR Manager",
+    department: "Human Resources",
+    avatar:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
+    type: "Casual / PTO",
+    startDate: "Aug 20, 2026",
+    endDate: "Aug 22, 2026",
     days: 3,
-    reason: 'Attending relative wedding ceremony.',
-    appliedDate: 'Jul 29, 2026',
-    status: 'Rejected'
-  }
+    reason: "Attending relative wedding ceremony.",
+    appliedDate: "Jul 29, 2026",
+    status: "Rejected",
+  },
 ];
 
 export const AdminLeave = () => {
   const [requests, setRequests] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   // Handle Approve / Reject Actions
   const handleStatusChange = (id, newStatus) => {
-    setRequests(prev =>
-      prev.map(req => (req.id === id ? { ...req, status: newStatus } : req))
+    setRequests((prev) =>
+      prev.map((req) => (req.id === id ? { ...req, status: newStatus } : req)),
     );
   };
 
@@ -85,7 +85,7 @@ export const AdminLeave = () => {
   } */
 
   // Filter requests
- /*  const filteredRequests = requests.filter(req => {
+  /*  const filteredRequests = requests.filter(req => {
     const matchesSearch =
       req.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
       req.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,117 +97,155 @@ export const AdminLeave = () => {
   }); */
 
   const fetchLeaveRequests = async () => {
-  try {
-    const token = localStorage.getItem("ems-token");
+    try {
+      const token = localStorage.getItem("ems-token");
 
-    if (!token) {
-      console.error("No authentication token found");
-      return;
-    }
-
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/all-leaves`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
+      if (!token) {
+        console.error("No authentication token found");
+        return;
       }
-    );
 
-    console.log("Leave response:", response.data);
-
-    setRequests(response.data.leaves || []);
-  } catch (error) {
-    console.error(
-      "Failed to fetch leave requests:",
-      error.response?.data || error
-    );
-  }
-};
-
-useEffect(() => {
-  fetchLeaveRequests();
-}, []);
-
-//! Approve Leave
-const handleApprove = async (leaveId) => {
-  try {
-    const token = localStorage.getItem("ems-token");
-
-    if (!token) {
-      console.error("No authentication token found");
-      return;
-    }
-
-    const response = await axios.patch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/${leaveId}/approve`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/all-leaves`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
         },
-      }
-    );
+      );
 
-    console.log("Leave approved:", response.data);
+      console.log("Leave response:", response.data);
 
-    if(response.data.success){
-      toast.success(response.data.message);
+      setRequests(response.data.leaves || []);
+    } catch (error) {
+      console.error(
+        "Failed to fetch leave requests:",
+        error.response?.data || error,
+      );
     }
+  };
 
-    // Refresh leave list
+  useEffect(() => {
     fetchLeaveRequests();
+  }, []);
 
-  } catch (error) {
-    console.error(
-      "Approve leave error:",
-      error.response?.data || error.message
-    );
-  }
-};
+  //! Approve Leave
+  const handleApprove = async (leaveId) => {
+    try {
+      const token = localStorage.getItem("ems-token");
 
-//! Reject Leave
-const handleReject = async (leaveId) => {
-  try {
-    const token = localStorage.getItem("ems-token");
-
-    if (!token) {
-      console.error("No authentication token found");
-      return;
-    }
-
-    const response = await axios.patch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/${leaveId}/reject`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      if (!token) {
+        console.error("No authentication token found");
+        return;
       }
-    );
 
-    console.log("Leave rejected:", response.data);
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/${leaveId}/approve`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-    if(response.data.success){
-      toast.success(response.data.message);
+      console.log("Leave approved:", response.data);
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+      }
+
+      // Refresh leave list
+      fetchLeaveRequests();
+    } catch (error) {
+      console.error(
+        "Approve leave error:",
+        error.response?.data || error.message,
+      );
     }
+  };
 
-    // Refresh leave list
-    fetchLeaveRequests();
+  //! Reject Leave
+  const handleReject = async (leaveId) => {
+    try {
+      const token = localStorage.getItem("ems-token");
 
-  } catch (error) {
-    console.error(
-      "Reject leave error:",
-      error.response?.data || error.message
-    );
-  }
-};
+      if (!token) {
+        console.error("No authentication token found");
+        return;
+      }
+
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/${leaveId}/reject`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      console.log("Leave rejected:", response.data);
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+      }
+
+      // Refresh leave list
+      fetchLeaveRequests();
+    } catch (error) {
+      console.error(
+        "Reject leave error:",
+        error.response?.data || error.message,
+      );
+    }
+  };
+
+  //! get all pending leaves
+
+  const fetchPendingLeaves = async () => {
+    try {
+      const token = localStorage.getItem("ems-token");
+
+      if (!token) {
+        console.error("No authentication token found");
+        return;
+      }
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/pending`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        },
+      );
+
+      console.log("Leave response:", response.data);
+
+      setRequests(response.data.leaves || []);
+    } catch (error) {
+      console.error(
+        "Failed to fetch leave requests:",
+        error.response?.data || error,
+      );
+    }
+  };
+
+  const handleStatus = (status) => {
+    setStatusFilter(status);
+    if (status === "Pending") {
+      fetchPendingLeaves();
+    } else {
+      fetchLeaveRequests();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
       <div className="max-w-7xl mx-auto space-y-6">
-        
         {/* --- Header --- */}
         <header className="border-b border-slate-800 pb-5">
           <h1 className="text-3xl font-extrabold tracking-tight text-white">
@@ -220,12 +258,11 @@ const handleReject = async (leaveId) => {
 
         {/* --- Controls Bar --- */}
         <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
-          
           {/* Search */}
           <div className="relative w-full md:w-80">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search employee, leave type..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -235,14 +272,14 @@ const handleReject = async (leaveId) => {
 
           {/* Status Filter */}
           <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-1">
-            {['All', 'Pending', 'Approved', 'Rejected'].map((status) => (
+            {["All", "Pending"].map((status) => (
               <button
                 key={status}
-                onClick={() => setStatusFilter(status)}
+                onClick={() => handleStatus(status)}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                  statusFilter === status 
-                    ? 'bg-indigo-600 text-white' 
-                    : 'text-slate-400 hover:text-slate-200'
+                  statusFilter === status
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {status}
@@ -268,18 +305,29 @@ const handleReject = async (leaveId) => {
               <tbody className="divide-y divide-slate-800/60 text-sm">
                 {requests.length > 0 ? (
                   requests.map((req) => (
-                    <tr key={req.id} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={req.id}
+                      className="hover:bg-slate-800/40 transition-colors"
+                    >
                       {/* Employee info */}
                       <td className="py-4 px-2">
                         <div className="flex items-center gap-3">
-                          <img 
-                            src={req.avatar} 
-                            alt={req.employeeId.fullName} 
-                            className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800"
-                          />
+                          {req.employeeId.profileImage ? (
+                            <img
+                              src={req.employeeId.profileImage}
+                              alt={req.employeeId.fullName}
+                              className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800"
+                            />
+                          ) : (
+                            <User color="green"/>
+                          )}
                           <div>
-                            <div className="font-semibold text-[12px] text-white">{req.employeeId.fullName}</div>
-                            <div className="text-xs text-slate-400">{req.employeeId.department}</div>
+                            <div className="font-semibold text-[12px] text-white">
+                              {req.employeeId.fullName}
+                            </div>
+                            <div className="text-xs text-slate-400">
+                              {req.employeeId.department}
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -293,43 +341,59 @@ const handleReject = async (leaveId) => {
 
                       {/* Duration */}
                       <td className="py-4 px-2 text-xs">
-                        <div className="text-slate-200 text-[10px] font-medium">{new Date(req.startDate).toLocaleDateString()} - {new Date(req.endDate).toLocaleDateString()}</div>
-                        <div className="text-slate-400 text-[11px] mt-0.5">{req.totalDays} Day(s)</div>
+                        <div className="text-slate-200 text-[10px] font-medium">
+                          {new Date(req.startDate).toLocaleDateString()} -{" "}
+                          {new Date(req.endDate).toLocaleDateString()}
+                        </div>
+                        <div className="text-slate-400 text-[11px] mt-0.5">
+                          {req.totalDays} Day(s)
+                        </div>
                       </td>
 
                       {/* Reason */}
-                      <td className="py-4 px-2 text-[12px] text-slate-300 max-w-xs truncate" title={req.reason}>
+                      <td
+                        className="py-4 px-2 text-[12px] text-slate-300 max-w-xs truncate"
+                        title={req.reason}
+                      >
                         "{req.reason}"
                       </td>
 
                       {/* Status */}
                       <td className="py-4 px-2">
-                        <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${
-                          req.status === 'Approved' 
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                            : req.status === 'Rejected'
-                            ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                            : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                        }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${
-                            req.status === 'Approved' ? 'bg-emerald-400' : req.status === 'Rejected' ? 'bg-rose-400' : 'bg-amber-400'
-                          }`} />
+                        <span
+                          className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${
+                            req.status === "Approved"
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                              : req.status === "Rejected"
+                                ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                                : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                          }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              req.status === "Approved"
+                                ? "bg-emerald-400"
+                                : req.status === "Rejected"
+                                  ? "bg-rose-400"
+                                  : "bg-amber-400"
+                            }`}
+                          />
                           {req.status}
                         </span>
                       </td>
 
                       {/* Actions */}
                       <td className="py-4 px-2 text-right">
-                        {req.status === 'Pending' ? (
+                        {req.status === "Pending" ? (
                           <div className="flex items-center justify-end gap-2">
-                            <button 
+                            <button
                               onClick={() => handleApprove(req._id)}
                               className="cursor-pointer p-1.5 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white rounded-lg transition-colors border border-emerald-500/30"
                               title="Approve"
                             >
                               <Check className="w-4 h-4" />
                             </button>
-                            <button 
+                            <button
                               onClick={() => handleReject(req._id)}
                               className="cursor-pointer p-1.5 bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white rounded-lg transition-colors border border-rose-500/30"
                               title="Reject"
@@ -338,14 +402,19 @@ const handleReject = async (leaveId) => {
                             </button>
                           </div>
                         ) : (
-                          <span className="text-xs text-slate-500 font-mono">Processed</span>
+                          <span className="text-xs text-slate-500 font-mono">
+                            Processed
+                          </span>
                         )}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-500 text-xs">
+                    <td
+                      colSpan={6}
+                      className="py-8 text-center text-slate-500 text-xs"
+                    >
                       No leave requests found.
                     </td>
                   </tr>
@@ -354,7 +423,6 @@ const handleReject = async (leaveId) => {
             </table>
           </div>
         </div>
-
       </div>
     </div>
   );
