@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   User,
   Lock,
@@ -11,21 +11,25 @@ import {
   Camera,
 } from "lucide-react";
 
+import axios from "axios";
+import { toast } from "react-hot-toast";
+
 export const EmployeeSettings = () => {
+  const [image, setImage] = useState(null);
+  const [profile, setProfile] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImage(imageUrl);
+    }
+  };
+
   const [activeTab, setActiveTab] = useState("profile");
-  const [savedSuccess, setSavedSuccess] = useState(false);
 
   const [disabled, setDisabled] = useState(true); // State to control the disabled state of the email input
-
-  // Profile Form State
-  const [profile, setProfile] = useState({
-    name: "Sarah Jenkins",
-    email: "sarah.j@company.com",
-    phone: "+1 (555) 019-2834",
-    location: "San Francisco, CA",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
-  });
 
   // Password Form State
   const [security, setSecurity] = useState({
@@ -35,17 +39,56 @@ export const EmployeeSettings = () => {
   });
 
   // Notifications State
-  const [notifications, setNotifications] = useState({
+  /* const [notifications, setNotifications] = useState({
     emailAlerts: true,
     leaveUpdates: true,
     companyNews: false,
-  });
+  }); */
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    try {
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile-image`,
+        {
+          profileImage: image,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+          },
+        },
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        await fetchProfile();
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
   };
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+          },
+        },
+      );
+      console.log("profile", response.data.employee);
+      setProfile(response.data.employee);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
@@ -66,7 +109,7 @@ export const EmployeeSettings = () => {
             {[
               { id: "profile", label: "Profile", icon: User },
               { id: "security", label: "Security", icon: Lock },
-              { id: "notifications", label: "Notifications", icon: Bell },
+              // { id: "notifications", label: "Notifications", icon: Bell },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -86,37 +129,61 @@ export const EmployeeSettings = () => {
             })}
           </div>
 
-          {savedSuccess && (
+         {/*  {savedSuccess && (
             <div className="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-xl text-xs font-medium animate-in fade-in duration-200">
               <ShieldCheck className="w-4 h-4" />
               Settings updated successfully!
             </div>
-          )}
+          )} */}
         </div>
 
         {/* --- Tab Content Cards --- */}
         <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-xl">
+          <span className="absolute top-6 -right-6 bg-green-900 px-2 py-0.5 rotate-[90deg]">
+            Employee
+          </span>
           {/* PROFILE TAB */}
           {activeTab === "profile" && (
             <form onSubmit={handleSave} className="space-y-6">
               {/* Avatar Section */}
               <div className="flex items-center gap-5 border-b border-slate-800/80 pb-6">
-                <div className="relative group">
+                <div className="relative w-20 h-20 group">
+                  {/* Profile Image */}
                   <img
-                    src={profile.avatar}
-                    alt={profile.name}
+                    src={
+                      image ||
+                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+                    }
+                    alt="Profile"
                     className="w-20 h-20 rounded-full object-cover ring-2 ring-indigo-500/50"
                   />
-                  <div className="absolute inset-0 bg-slate-950/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+
+                  {/* Hidden File Input */}
+                  <input
+                    id="profile-image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+
+                  {/* Camera Overlay */}
+                  <label
+                    htmlFor="profile-image"
+                    className="absolute inset-0 bg-slate-950/60 rounded-full 
+                   flex items-center justify-center 
+                   opacity-0 group-hover:opacity-100 
+                   transition-opacity cursor-pointer"
+                  >
                     <Camera className="w-5 h-5 text-white" />
-                  </div>
+                  </label>
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white">
-                    {profile.name}
+                    {profile?.fullName}
                   </h3>
                   <p className="text-xs text-slate-400">
-                    Senior Frontend Engineer • Engineering
+                    {profile?.designation} • {profile?.department}
                   </p>
                 </div>
               </div>
@@ -130,14 +197,10 @@ export const EmployeeSettings = () => {
                   <input
                     disabled
                     type="text"
-                    value={profile.name}
-                    onChange={(e) =>
-                      setProfile({ ...profile, name: e.target.value })
-                    }
+                    value={profile?.fullName}
                     className={`w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
                   />
                 </div>
-
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
                     Email Address
@@ -145,10 +208,7 @@ export const EmployeeSettings = () => {
                   <input
                     disabled
                     type="email"
-                    value={profile.email}
-                    onChange={(e) =>
-                      setProfile({ ...profile, email: e.target.value })
-                    }
+                    value={profile?.email}
                     className={`w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
                   />
                 </div>
@@ -160,11 +220,8 @@ export const EmployeeSettings = () => {
                   <input
                     disabled
                     type="text"
-                    value={profile.phone}
-                    onChange={(e) =>
-                      setProfile({ ...profile, phone: e.target.value })
-                    }
-                    className={`w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
+                    value={profile?.phone}
+                    className={`w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
                   />
                 </div>
 
@@ -172,14 +229,12 @@ export const EmployeeSettings = () => {
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
                     Location
                   </label>
-                  <input
-                    type="text"
-                    value={profile.location}
-                    onChange={(e) =>
-                      setProfile({ ...profile, location: e.target.value })
-                    }
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                  />
+                  <p
+                    className={`w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+                  >
+                    {profile?.address.city}, {profile?.address.country},{" "}
+                    {profile?.address.pinCode}
+                  </p>
                 </div>
               </div>
 
@@ -264,7 +319,7 @@ export const EmployeeSettings = () => {
           )}
 
           {/* NOTIFICATIONS TAB */}
-          {activeTab === "notifications" && (
+          {/* {activeTab === "notifications" && (
             <form onSubmit={handleSave} className="space-y-6">
               <div className="space-y-4">
                 {[
@@ -323,7 +378,7 @@ export const EmployeeSettings = () => {
                 </button>
               </div>
             </form>
-          )}
+          )} */}
         </div>
       </div>
     </div>
