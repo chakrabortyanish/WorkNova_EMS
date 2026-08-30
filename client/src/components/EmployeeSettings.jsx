@@ -50,6 +50,7 @@ export const EmployeeSettings = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+         await fetchProfile();
       }
     } catch (error) {
       console.error("Update password error:", error.response?.data || error);
