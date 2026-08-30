@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
-  Clock,
   Calendar,
-  CheckCircle2,
-  Circle,
-  AlertCircle,
-  FileText,
   DollarSign,
   Bell,
   Sparkles,
   User,
   Briefcase,
-  ChevronRight,
   Play,
   Square,
 } from "lucide-react";
@@ -21,16 +15,7 @@ import { toast } from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
 
-// --- Fake / Mock Data for Employee ---
-const mockEmployeeInfo = {
-  name: "Alex Rivera",
-  role: "Senior UI/UX Designer",
-  employeeId: "EMP-2041",
-  department: "Design & UX",
-  avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-  shift: "09:00 AM - 05:00 PM",
-  status: "Punched In",
-};
+import {useAuth} from "../context/AuthContext.jsx";
 
 const mockLeaveBalances = [
   {
@@ -61,25 +46,8 @@ export const EmployeeDashboard = () => {
 
   const [isPunchedIn, setIsPunchedIn] = useState(false);
 
-  const [employeeInfo, setEmployeeInfo] = useState();
+  const {employeeInfo} = useAuth();
 
-  const fetchProfile = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
-          },
-        },
-      );
-      if (res.data.success) {
-        setEmployeeInfo(res.data.employee);
-      }
-    } catch (error) {
-      console.error("Error fetching employee profile:", error);
-    }
-  };
 
   const handleCheckIn = async () => {
     setIsPunchedIn(true);
@@ -123,10 +91,6 @@ export const EmployeeDashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
   // Toggle task completion state
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
@@ -135,7 +99,7 @@ export const EmployeeDashboard = () => {
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
           <div className="flex items-center gap-4">
             <img
-              src={mockEmployeeInfo.avatar}
+              src={employeeInfo?.profileImage}
               alt={employeeInfo?.fullName}
               className="w-14 h-14 rounded-2xl object-cover ring-2 ring-indigo-500/40 p-0.5 shadow-lg shadow-indigo-500/10"
             />

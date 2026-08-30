@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -28,8 +29,32 @@ function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const [employeeInfo, setEmployeeInfo] = useState();
+  const fetchProfile = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+            },
+          },
+        );
+        if (res.data.success) {
+          setEmployeeInfo(res.data.employee);
+          // console.log("Employee profile:", res.data.employee);
+        }
+      } catch (error) {
+        console.error("Error fetching employee profile:", error);
+      }
+    };
+
+  if(user?.role === "employee"){
+    fetchProfile();
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, employeeInfo }}>
       {children}
     </AuthContext.Provider>
   );

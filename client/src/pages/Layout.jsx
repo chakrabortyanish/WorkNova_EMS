@@ -22,7 +22,7 @@ import { jwtDecode } from "jwt-decode";
 import {useAuth} from "../context/AuthContext.jsx";
 
 export const Layout = () => {
-  const {user, logout} = useAuth();
+  const {user, logout, employeeInfo} = useAuth();
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
@@ -112,8 +112,8 @@ export const Layout = () => {
         <div className="relative z-10 p-4 mx-4 mt-4 rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-900/40 border border-slate-800/80 backdrop-blur-md shadow-inner">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white text-sm shadow-md shadow-indigo-500/20">
-                {user?.role === "admin" ? "AD" : "EM"}
+              <div className="w-10 h-10 overflow-hidden rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white text-sm shadow-md shadow-indigo-500/20">
+                {user?.role === "admin" ? "AD" : <img className="w-full h-full" src={employeeInfo?.profileImage} alt=""/>}
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
             </div>

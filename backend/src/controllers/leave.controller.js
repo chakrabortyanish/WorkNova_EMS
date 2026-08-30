@@ -318,7 +318,7 @@ export const getAllLeaves = async (req, res) => {
     const leaves = await Leave.find()
       .populate(
         "employeeId",
-        "fullName email department role"
+        "fullName email department role profileImage"
       )
       .populate(
         "reviewedBy",
@@ -356,7 +356,7 @@ export const getPendingLeaves = async (req, res) => {
     })
       .populate(
         "employeeId",
-        "fullName email department role"
+        "fullName email department role profileImage"
       )
       .sort({
         createdAt: 1,

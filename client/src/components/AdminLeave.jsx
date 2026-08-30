@@ -312,7 +312,7 @@ export const AdminLeave = () => {
                       {/* Employee info */}
                       <td className="py-4 px-2">
                         <div className="flex items-center gap-3">
-                          {req.employeeId.profileImage ? (
+                          {req.employeeId?.profileImage ? (
                             <img
                               src={req.employeeId.profileImage}
                               alt={req.employeeId.fullName}

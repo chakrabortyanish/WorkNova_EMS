@@ -1,15 +1,10 @@
-import {useState} from 'react'
-import { AdminSettings, EmployeeSettings } from '../components';
+import { AdminSettings, EmployeeSettings } from "../components";
+
+import { useAuth } from "../context/AuthContext.jsx";
 
 export const Settings = () => {
-   const [role, setRole] = useState('adminvv'); // Mock role state
-    return (
-      <>
-              {
-                  role === "admin"
-                  ? <AdminSettings />
-                  : <EmployeeSettings />
-              }
-          </>
-    );
-}
+  const { user } = useAuth();
+  let role = user?.role;
+
+  return <>{role === "admin" ? <AdminSettings /> : <EmployeeSettings />}</>;
+};
