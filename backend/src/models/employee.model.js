@@ -27,10 +27,20 @@ const employeeSchema = new mongoose.Schema(
       required: true,
     },
 
+    isPasswordUpdate: {
+      type: Boolean,
+      default: false,
+    },
+
     // Personal Information
     profileImage: {
       type: String,
       default: "",
+    },
+
+    isImageUpdate: {
+      type: Boolean,
+      default: false,
     },
 
     phone: {

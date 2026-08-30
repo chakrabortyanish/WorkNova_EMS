@@ -240,9 +240,9 @@ export const updateProfileImage = async (req, res) => {
   try {
     const employeeId = req.employeeId;
 
-    const { profileImage } = req.body;
+    // console.log("Uploaded file:", req.file);
 
-    if (!profileImage) {
+    if (!req.file) {
       return res.status(400).json({
         success: false,
         message: "Profile image is required",
@@ -258,13 +258,17 @@ export const updateProfileImage = async (req, res) => {
       });
     }
 
-    employee.profileImage = profileImage;
+    // CloudinaryStorage already uploaded the image.
+    // Get Cloudinary URL from req.file
+    employee.profileImage = req.file.path;
+    employee.isImageUpdate = true;
 
     await employee.save();
 
     return res.status(200).json({
       success: true,
       message: "Profile image updated successfully",
+      profileImage: employee.profileImage,
     });
   } catch (error) {
     console.error("Update profile image error:", error);
@@ -272,6 +276,7 @@ export const updateProfileImage = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to update profile image",
+      error: error.message,
     });
   }
 };
@@ -279,7 +284,7 @@ export const updateProfileImage = async (req, res) => {
 //! Update Password
 export const updatePassword = async (req, res) => {
   try {
-    const employeeId = req.user.id;
+    const employeeId = req.employeeId;
 
     const {
       currentPassword,
@@ -335,6 +340,7 @@ export const updatePassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     employee.password = hashedPassword;
+    employee.isPasswordUpdate = true;
 
     await employee.save();
 

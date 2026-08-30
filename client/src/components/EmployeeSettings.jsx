@@ -1,15 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  User,
-  Lock,
-  Bell,
-  Save,
-  ShieldCheck,
-  Mail,
-  Phone,
-  MapPin,
-  Camera,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { User, Lock, Save, Camera } from "lucide-react";
 
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -17,19 +7,21 @@ import { toast } from "react-hot-toast";
 export const EmployeeSettings = () => {
   const [image, setImage] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [preview, setPreview] = useState("");
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const selectedFile = e.target.files[0];
 
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
-    }
+    if (!selectedFile) return;
+
+    setImage(selectedFile);
+
+    // Only for temporary preview
+    setPreview(URL.createObjectURL(selectedFile));
   };
 
   const [activeTab, setActiveTab] = useState("profile");
-
-  const [disabled, setDisabled] = useState(true); // State to control the disabled state of the email input
+  const disabled = true;
 
   // Password Form State
   const [security, setSecurity] = useState({
@@ -38,20 +30,16 @@ export const EmployeeSettings = () => {
     confirmPassword: "",
   });
 
-  // Notifications State
-  /* const [notifications, setNotifications] = useState({
-    emailAlerts: true,
-    leaveUpdates: true,
-    companyNews: false,
-  }); */
-
-  const handleSave = async (e) => {
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile-image`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/password`,
         {
-          profileImage: image,
+          currentPassword: security.currentPassword,
+          newPassword: security.newPassword,
+          confirmPassword: security.confirmPassword,
         },
         {
           headers: {
@@ -62,10 +50,69 @@ export const EmployeeSettings = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
-        await fetchProfile();
       }
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("Update password error:", error.response?.data || error);
+
+      toast.error(error.response?.data?.message || "Failed to update password");
+    }
+  };
+
+  // Notifications State
+  /* const [notifications, setNotifications] = useState({
+    emailAlerts: true,
+    leaveUpdates: true,
+    companyNews: false,
+  }); */
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    if (!image) {
+      toast.error("Please select an image first.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+
+      formData.append("profileImage", image);
+
+      // console.log("File:", image);
+      // console.log("FormData:", formData.get("profileImage"));
+
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile-image`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+          },
+        },
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+
+        await fetchProfile();
+
+        setImage(null);
+
+        if (preview) {
+          URL.revokeObjectURL(preview);
+        }
+
+        setPreview("");
+      }
+    } catch (error) {
+      console.error(
+        "Update profile image error:",
+        error.response?.data || error,
+      );
+
+      toast.error(
+        error.response?.data?.message || "Failed to update profile image",
+      );
     }
   };
 
@@ -79,7 +126,7 @@ export const EmployeeSettings = () => {
           },
         },
       );
-      console.log("profile", response.data.employee);
+      // console.log("profile", response.data.employee);
       setProfile(response.data.employee);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -129,12 +176,18 @@ export const EmployeeSettings = () => {
             })}
           </div>
 
-         {/*  {savedSuccess && (
-            <div className="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-xl text-xs font-medium animate-in fade-in duration-200">
-              <ShieldCheck className="w-4 h-4" />
-              Settings updated successfully!
-            </div>
-          )} */}
+          <div className="flex items-center gap-2 text-xs">
+            {!profile?.isImageUpdate && (
+              <span className=" bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-xl">
+                Update Image
+              </span>
+            )}
+            {!profile?.isPasswordUpdate && (
+              <span className=" bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-xl">
+                Update Password
+              </span>
+            )}
+          </div>
         </div>
 
         {/* --- Tab Content Cards --- */}
@@ -151,7 +204,8 @@ export const EmployeeSettings = () => {
                   {/* Profile Image */}
                   <img
                     src={
-                      image ||
+                      preview ||
+                      profile?.profileImage ||
                       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
                     }
                     alt="Profile"
@@ -251,7 +305,10 @@ export const EmployeeSettings = () => {
 
           {/* SECURITY TAB */}
           {activeTab === "security" && (
-            <form onSubmit={handleSave} className="space-y-4 max-w-md">
+            <form
+              onSubmit={handlePasswordUpdate}
+              className="space-y-4 max-w-md"
+            >
               <h3 className="text-sm font-bold text-white mb-2">
                 Change Password
               </h3>
