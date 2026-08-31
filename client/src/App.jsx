@@ -17,12 +17,12 @@ import {
   Employees,
   Attendance,
 } from "./pages/index.js";
-import LoginPage from "./pages/LoginPage.jsx";
+import Home from "./pages/Home.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<LoginPage />} />
+      <Route path="/" element={<Home />} />
 
       <Route path="/dashboard" element={<Layout />}>
         <Route index element={<Dashboard />} />

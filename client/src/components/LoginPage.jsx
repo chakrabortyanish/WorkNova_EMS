@@ -57,12 +57,6 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-slate-950 relative overflow-hidden font-sans">
-      {/* Background Glow Blobs */}
-      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl pointer-events-none animate-pulse" />
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-600/30 rounded-full blur-3xl pointer-events-none animate-pulse" />
-
-      {/* Main Glassmorphic Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -216,6 +210,5 @@ export default function LoginPage() {
           Protected by enterprise-grade encryption.
         </p>
       </motion.div>
-    </div>
   );
 }
