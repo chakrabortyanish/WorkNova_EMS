@@ -33,9 +33,6 @@ export default function Home() {
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-medium text-slate-400">
-          <span className="hidden sm:inline-block px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300">
-            v2.4 Enterprise
-          </span>
           <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
             System Operational
