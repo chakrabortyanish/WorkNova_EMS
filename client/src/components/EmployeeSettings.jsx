@@ -193,9 +193,31 @@ export const EmployeeSettings = () => {
 
         {/* --- Tab Content Cards --- */}
         <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-          <span className="absolute top-6 -right-6 bg-green-900 px-2 py-0.5 rotate-[90deg]">
-            Employee
-          </span>
+          <div
+    className="
+      absolute
+      top-7
+      right-5
+      translate-x-1/2
+      rotate-90
+      origin-center
+      flex items-center justify-center
+      px-4
+      py-1.5
+      bg-green-800
+      rounded
+      backdrop-blur-md
+      text-[10px]
+      sm:text-xs
+      font-semibold
+      tracking-wide
+      text-white
+      shadow-lg
+      whitespace-nowrap
+    "
+  >
+    Employee
+  </div>
           {/* PROFILE TAB */}
           {activeTab === "profile" && (
             <form onSubmit={handleSave} className="space-y-6">
