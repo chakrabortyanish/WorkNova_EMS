@@ -1,5 +1,6 @@
 //! for employee controllers
 import {
+  getAllEmployees,
   createEmployee,
   employeeLogin,
   getEmployeeProfile,
@@ -8,6 +9,7 @@ import {
 } from "./employee.controller.js";
 
 export {
+  getAllEmployees,
   createEmployee,
   employeeLogin,
   getEmployeeProfile,
@@ -61,4 +63,23 @@ export {
   getEmployeeLeaves,
   approveLeave,
   rejectLeave,
+};
+
+
+//! for payslip routes
+
+import {
+  createPayslip,
+  getAllPayslips,
+  getMyPayslips,
+  getPayslip,
+  markAsPaid,
+} from "../controllers/payslip.controller.js";
+
+export {
+  createPayslip,
+  getAllPayslips,
+  getMyPayslips,
+  getPayslip,
+  markAsPaid,
 };

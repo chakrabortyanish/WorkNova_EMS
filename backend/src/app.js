@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 export const app = express();
 
 //* all routes
-import { employeeRoutes, adminRoutes, attendanceRoutes, leaveRoutes } from "./routes/index.js";
+import { employeeRoutes, adminRoutes, attendanceRoutes, leaveRoutes, payslipRoutes } from "./routes/index.js";
 
 //Allow client requests
 app.use(
@@ -27,3 +27,4 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/employee", employeeRoutes);
 app.use("/api/v1/attendance", attendanceRoutes);
 app.use("/api/v1/leave", leaveRoutes);
+app.use("/api/v1/payslip", payslipRoutes);

@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  getAllEmployees,
   createEmployee,
   employeeLogin,
   getEmployeeProfile,
@@ -21,6 +22,9 @@ router.post("/login", employeeLogin);
 
 
 //! ADMIN-PROTECTED ROUTE
+
+// get all employees
+router.get("/all",adminAuth, getAllEmployees);
 
 router.post("/create",adminAuth, createEmployee);
 

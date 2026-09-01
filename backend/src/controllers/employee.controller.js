@@ -3,6 +3,25 @@ import jwt from "jsonwebtoken";
 
 import Employee from "../models/employee.model.js";
 
+//! GET ALL EMPLOYEES
+export const getAllEmployees = async (req, res) => {
+  try {
+    const employees = await Employee.find({adminId: req.adminId}).select("-password");
+
+    res.status(200).json({
+      success: true,
+      employees,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to get employees",
+    });
+  }
+};
+
 // ==========================================
 //! CREATE EMPLOYEE
 // ==========================================
