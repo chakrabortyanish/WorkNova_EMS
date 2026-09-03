@@ -13,7 +13,25 @@ import {
   Plus,
 } from "lucide-react";
 
+import defalut_pic from "../assets/default-picture.png";
+
 const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api/v1`;
+
+// all months
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export const AdminPayslips = () => {
   const [payrolls, setPayrolls] = useState([]);
@@ -31,7 +49,7 @@ export const AdminPayslips = () => {
 
   const [formData, setFormData] = useState({
     employee: "",
-    month: new Date().getMonth() + 1,
+    month: new Date().getMonth(),
     year: new Date().getFullYear(),
     basicSalary: "",
     allowances: "",
@@ -58,7 +76,7 @@ export const AdminPayslips = () => {
       const response = await axios.get(`${API_URL}/payslip/all`, axiosConfig);
 
       setPayrolls(response.data.payslips);
-      console.log(5, response.data.payslips)
+      console.log(5, response.data.payslips);
     } catch (error) {
       console.error("Fetch payslips error:", error);
 
@@ -80,12 +98,12 @@ export const AdminPayslips = () => {
        */
       const response = await axios.get(`${API_URL}/employee/all`, axiosConfig);
 
-      if(response.data.success === true){
+      if (response.data.success === true) {
         setEmployees(response.data.employees);
         // setPayro(response.data.employees);
       }
-      
-      console.log(12, response.data.employees)
+
+      console.log(12, response.data.employees);
     } catch (error) {
       console.error("Fetch employees error:", error);
 
@@ -139,7 +157,7 @@ export const AdminPayslips = () => {
         `${API_URL}/payslip`,
         {
           employee: formData.employee,
-          month: Number(formData.month),
+          month: formData.month,
           year: Number(formData.year),
           basicSalary: Number(formData.basicSalary),
           allowances: Number(formData.allowances || 0),
@@ -238,16 +256,6 @@ export const AdminPayslips = () => {
     (total, item) => total + Number(item.netPayable || 0),
     0,
   );
-
-  // ========================================
-  // MONTH NAME
-  // ========================================
-
-  const getMonthName = (month) => {
-    return new Date(2000, month - 1).toLocaleString("en-US", {
-      month: "long",
-    });
-  };
 
   // ========================================
   // CURRENCY
@@ -436,8 +444,16 @@ export const AdminPayslips = () => {
 
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 overflow-hidden rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold">
-                            <img src={pay.employee?.profileImage} alt={pay.employee?.fullName} className="w-full h-full"/>
+                          <div className="w-9 h-9 overflow-hidden rounded-full bg-gray-50 flex items-center justify-center">
+                            <img
+                              src={
+                                pay.employee?.profileImage
+                                  ? pay.employee?.profileImage
+                                  : defalut_pic
+                              }
+                              alt={pay.employee?.fullName}
+                              className="w-full h-full"
+                            />
                           </div>
 
                           <div>
@@ -455,7 +471,7 @@ export const AdminPayslips = () => {
                       {/* Month */}
 
                       <td className="py-4 px-6 text-xs text-slate-300">
-                        {getMonthName(pay.month)} {pay.year}
+                        {pay.month}/{pay.year}
                       </td>
 
                       {/* Basic */}
@@ -613,13 +629,11 @@ export const AdminPayslips = () => {
                     onChange={handleChange}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
-                    {Array.from({ length: 12 }, (_, index) => index + 1).map(
-                      (month) => (
-                        <option key={month} value={month}>
-                          {getMonthName(month)}
-                        </option>
-                      ),
-                    )}
+                    {months.map((month) => (
+                      <option key={month} value={month}>
+                        {month}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

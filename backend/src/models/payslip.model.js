@@ -10,10 +10,8 @@ const payslipSchema = new mongoose.Schema(
 
     // Salary month
     month: {
-      type: Number,
+      type: String,
       required: true,
-      min: 1,
-      max: 12,
     },
 
     year: {
