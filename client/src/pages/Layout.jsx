@@ -82,8 +82,8 @@ export const Layout = () => {
         {/* Brand Header */}
         <div className="relative z-10 flex items-center justify-between h-20 px-6 border-b border-slate-800/60 backdrop-blur-sm">
           <div className="flex items-center gap-3">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 p-0.5 shadow-lg shadow-indigo-500/25">
-              <div className="h-full w-full bg-slate-950 rounded-[10px] flex items-center justify-center p-1.5">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 p-1 shadow-lg shadow-indigo-500/25">
+              <div className="h-full w-full bg-gray-200 rounded-[10px] flex items-center justify-center p-1.5">
                 <img
                   src={logo}
                   alt="WorkNova"
@@ -215,7 +215,7 @@ export const Layout = () => {
         </header>
 
         {/* Dynamic Page Content Outlet */}
-        <main className="flex-1 overflow-y-auto p-2 sm:p-5 lg:p-6 bg-slate-950 text-slate-100">
+        <main className="flex-1 overflow-y-auto py-2 sm:py-4 lg:py-5 bg-slate-950 text-slate-100">
           <Outlet />
         </main>
       </div>

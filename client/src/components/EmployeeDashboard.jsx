@@ -140,73 +140,6 @@ export const EmployeeDashboard = () => {
           </div>
         </header>
 
-        {/* --- Attendance Clock-In & Time Tracker --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Punch In / Out Interactive Card */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl" />
-
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Time Tracker
-                </span>
-                <span
-                  className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${
-                    isPunchedIn
-                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                      : "bg-slate-800 text-slate-400 border-slate-700"
-                  }`}
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${isPunchedIn ? "bg-emerald-400 animate-pulse" : "bg-slate-500"}`}
-                  />
-                  {isPunchedIn ? "Working Now" : "Not Punched In"}
-                </span>
-              </div>
-
-              <div className="text-center my-4">
-                <div className="text-4xl font-black text-white tracking-wider font-mono">
-                  05:42:18
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Shift Hours: {employeeInfo?.shift}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-3 pt-2">
-              {!isPunchedIn ? (
-                <button
-                  onClick={handleCheckIn}
-                  className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 shadow-lg
-                  bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-600/20 hover:scale-[1.01]'
-                "
-                >
-                  <Play className="w-4 h-4 fill-white" /> Clock In
-                </button>
-              ) : (
-                <button
-                  onClick={handleCheckOut}
-                  className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 shadow-lg
-                    bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white shadow-rose-600/20 hover:scale-[1.01]"
-                >
-                  <Square className="w-4 h-4 fill-white" /> Clock Out
-                </button>
-              )}
-
-              <div className="flex justify-between items-center text-xs text-slate-400 px-1">
-                <span>
-                  Punched in at:{" "}
-                  <strong className="text-slate-200">09:02 AM</strong>
-                </span>
-                <span>
-                  Break time:{" "}
-                  <strong className="text-slate-200">45 mins</strong>
-                </span>
-              </div>
-            </div>
-          </div>
 
           {/* Quick Actions & Shortcut Grid */}
           <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -216,12 +149,14 @@ export const EmployeeDashboard = () => {
                 icon: Calendar,
                 color: "text-indigo-400",
                 bg: "bg-indigo-500/10",
+                link: "/dashboard/leave",
               },
               {
                 label: "View Paystubs",
                 icon: DollarSign,
                 color: "text-emerald-400",
                 bg: "bg-emerald-500/10",
+                link: "/dashboard/payslips",
               },
               /* { label: 'Submit Expense', icon: FileText, color: 'text-amber-400', bg: 'bg-amber-500/10' }, 
               { label: 'Shift Schedule', icon: Clock, color: 'text-purple-400', bg: 'bg-purple-500/10' }, */
@@ -230,14 +165,16 @@ export const EmployeeDashboard = () => {
                 icon: User,
                 color: "text-cyan-400",
                 bg: "bg-cyan-500/10",
+                link: "/dashboard/settings",
               },
               // { label: 'Company Helpdesk', icon: AlertCircle, color: 'text-pink-400', bg: 'bg-pink-500/10' },
             ].map((action, idx) => {
               const Icon = action.icon;
               return (
                 <button
+                 onClick={() => navigate(action.link)}
                   key={idx}
-                  className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:border-slate-700 hover:-translate-y-1 transition-all duration-300 group shadow-sm"
+                  className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 py-10 flex flex-col items-center justify-center gap-3 hover:border-slate-700 hover:-translate-y-1 transition-all duration-300 group shadow-sm cursor-pointer"
                 >
                   <div
                     className={`p-3 rounded-xl ${action.bg} ${action.color} group-hover:scale-110 transition-transform duration-300`}
@@ -251,7 +188,6 @@ export const EmployeeDashboard = () => {
               );
             })}
           </div>
-        </div>
 
         {/* --- Leave Balances Section --- */}
         <div>
