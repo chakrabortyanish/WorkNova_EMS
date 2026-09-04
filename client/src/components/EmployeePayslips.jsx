@@ -1,30 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
-  DollarSign,
   Download,
   Eye,
-  FileText,
-  TrendingUp,
   Calendar,
-  Building,
-  Printer,
-  X,
-  CheckCircle2,
-  Briefcase,
 } from "lucide-react";
 
 import PayslipModal from "./PayslipModal";
 
 import axios from "axios";
 
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-
 export const EmployeePayslips = () => {
   const [selectedPayslip, setSelectedPayslip] = useState(null);
   const [myPayslips, setMyPayslips] = useState(null);
 
-  const payslipRef = useRef(null);
 
   const fetchMyPayslips = async () => {
     try {
@@ -223,6 +211,7 @@ export const EmployeePayslips = () => {
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
+                          onClick={() => setSelectedPayslip(pay)}
                           className="p-1.5 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 rounded-lg transition-colors"
                           title="Download PDF"
                         >

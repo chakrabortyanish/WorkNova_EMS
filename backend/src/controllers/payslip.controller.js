@@ -109,7 +109,7 @@ export const getMyPayslips = async (req, res) => {
     }).sort({
       year: -1,
       month: -1,
-    });
+    }).populate("employee", "fullName designation email");
 
     res.status(200).json({
       success: true,
