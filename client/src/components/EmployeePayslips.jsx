@@ -13,6 +13,8 @@ import {
   Briefcase,
 } from "lucide-react";
 
+import PayslipModal from "./PayslipModal";
+
 import axios from "axios";
 
 import jsPDF from "jspdf";
@@ -52,7 +54,7 @@ export const EmployeePayslips = () => {
     fetchMyPayslips();
   }, []);
 
-  const handleDownloadPDF = async () => {
+ /*  const handleDownloadPDF = async () => {
     if (!payslipRef.current) return;
 
     try {
@@ -89,7 +91,7 @@ export const EmployeePayslips = () => {
 
       alert("Failed to download payslip");
     }
-  };
+  }; */
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
@@ -190,7 +192,7 @@ export const EmployeePayslips = () => {
                     </td>
 
                     <td className="py-4 px-6 text-xs text-slate-400">
-                      {pay.status === "paid"
+                      {pay.status === "Paid"
                         ? new Date(pay.paidAt).toLocaleDateString()
                         : "Pending"}
                     </td>
@@ -237,128 +239,7 @@ export const EmployeePayslips = () => {
       </div>
 
       {/* --- Payslip Details Modal --- */}
-      {selectedPayslip && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div
-            className="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl relative space-y-6 animate-in fade-in zoom-in-95 duration-200"
-          >
-            {/* Modal Header */}
-            <div ref={payslipRef} className="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl relative space-y-6 animate-in fade-in zoom-in-95 duration-200">
-              <div className="flex items-start justify-between border-b border-slate-800 pb-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">
-                      {selectedPayslip._id.slice(0, 5)}
-                    </span>
-                    <h2 className="text-lg font-bold text-white">
-                      Payslip - {selectedPayslip.month}
-                    </h2>
-                  </div>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Payment Status:{" "}
-                    <span className="font-mono text-green-500">
-                      {selectedPayslip.status}
-                    </span>
-                  </p>
-                </div>
-                <button
-                  onClick={() => setSelectedPayslip(null)}
-                  className="text-slate-400 hover:text-white p-1"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Breakdown Cards */}
-              <div className="grid grid-cols-2 gap-4 text-xs">
-                {/* Earnings */}
-                <div className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 space-y-2">
-                  <div className="font-bold text-emerald-400 border-b border-slate-800/80 pb-1.5 uppercase tracking-wider text-[10px]">
-                    Earnings
-                  </div>
-
-                  <div className="flex justify-between text-slate-300">
-                    <span>Basic Salary</span>
-                    <span className="font-mono">
-                      ₹{selectedPayslip.basicSalary}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-slate-300">
-                    <span>Allowances</span>
-                    <span className="font-mono text-emerald-400">
-                      +₹{selectedPayslip.allowances}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-white font-semibold border-t border-slate-800/80 pt-2">
-                    <span>Gross Salary</span>
-                    <span className="font-mono">
-                      ₹
-                      {(
-                        Number(selectedPayslip.basicSalary || 0) +
-                        Number(selectedPayslip.allowances || 0)
-                      ).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Deductions */}
-                <div className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 space-y-2">
-                  <div className="font-bold text-rose-400 border-b border-slate-800/80 pb-1.5 uppercase tracking-wider text-[10px]">
-                    Deductions
-                  </div>
-
-                  <div className="flex justify-between text-slate-300">
-                    <span>Total Deductions</span>
-                    <span className="font-mono text-rose-400">
-                      -₹{selectedPayslip.deductions}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-white font-semibold border-t border-slate-800/80 pt-2">
-                    <span>Net Payable</span>
-                    <span className="font-mono text-emerald-400">
-                      ₹{Number(selectedPayslip.netPayable).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total Summary Banner */}
-              <div className="bg-indigo-600/10 border border-indigo-500/20 rounded-xl p-4 flex items-center justify-between">
-                <div>
-                  <span className="text-xs text-indigo-300 font-semibold block">
-                    Total Take Home (Net Pay)
-                  </span>
-                  <span className="text-xs text-slate-400">
-                    Credited directly to bank account
-                  </span>
-                </div>
-                <span className="text-2xl font-extrabold text-white font-mono">
-                  ${selectedPayslip.netPayable.toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                onClick={() => window.print()}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors"
-              >
-                <Printer className="w-3.5 h-3.5" /> Print
-              </button>
-              <button
-                onClick={handleDownloadPDF}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center gap-2 shadow-lg shadow-indigo-600/25 transition-all"
-              >
-                <Download className="w-3.5 h-3.5" /> Download PDF
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {selectedPayslip && <PayslipModal selectedPayslip={selectedPayslip} setSelectedPayslip={setSelectedPayslip} />}
     </div>
   );
 };

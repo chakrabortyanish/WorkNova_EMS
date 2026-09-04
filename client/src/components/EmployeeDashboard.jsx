@@ -10,6 +10,8 @@ import {
   Square,
 } from "lucide-react";
 
+import default_pic from "../assets/default-picture.png";
+
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
@@ -99,7 +101,7 @@ export const EmployeeDashboard = () => {
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
           <div className="flex items-center gap-4">
             <img
-              src={employeeInfo?.profileImage}
+              src={employeeInfo?.profileImage || default_pic}
               alt={employeeInfo?.fullName}
               className="w-14 h-14 rounded-2xl object-cover ring-2 ring-indigo-500/40 p-0.5 shadow-lg shadow-indigo-500/10"
             />

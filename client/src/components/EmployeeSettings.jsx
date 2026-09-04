@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { User, Lock, Save, Camera } from "lucide-react";
 
+import default_pic from "../assets/default-picture.png";
+
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
@@ -228,8 +230,7 @@ export const EmployeeSettings = () => {
                   <img
                     src={
                       preview ||
-                      profile?.profileImage ||
-                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+                      profile?.profileImage || default_pic
                     }
                     alt="Profile"
                     className="w-20 h-20 rounded-full object-cover ring-2 ring-indigo-500/50"
