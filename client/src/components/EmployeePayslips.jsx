@@ -8,15 +8,15 @@ import {
 import PayslipModal from "./PayslipModal";
 
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const EmployeePayslips = () => {
   const [selectedPayslip, setSelectedPayslip] = useState(null);
   const [myPayslips, setMyPayslips] = useState(null);
 
-
   const fetchMyPayslips = async () => {
     try {
-      // setLoading(true);
+      toast.loading("Fetching payslips...");
 
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/payslip/my`,
@@ -34,7 +34,7 @@ export const EmployeePayslips = () => {
 
       alert(error.response?.data?.message || "Failed to fetch payslips");
     } finally {
-      // setLoading(false);
+      toast.dismiss();
     }
   };
 

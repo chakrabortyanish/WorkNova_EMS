@@ -6,7 +6,6 @@ import { toast } from "react-hot-toast";
 export const Attendance = () => {
   const [attendance, setAttendance] = useState([]);
   const [todayAttendance, setTodayAttendance] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
   const token = localStorage.getItem("ems-token");
@@ -25,6 +24,8 @@ export const Attendance = () => {
 
   const fetchMyAttendance = async () => {
     try {
+      toast.loading("Loading attendance...");
+
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/attendance/my-attendance`,
         authConfig
@@ -56,7 +57,7 @@ export const Attendance = () => {
           "Failed to load attendance"
       );
     } finally {
-      setLoading(false);
+      toast.dismiss();
     }
   };
 
@@ -70,7 +71,7 @@ export const Attendance = () => {
 
   const handleCheckIn = async () => {
     try {
-      setActionLoading(true);
+      toast.loading("Checking in...");
 
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/attendance/check-in`,
@@ -92,7 +93,7 @@ export const Attendance = () => {
           "Check-in failed. Please try again."
       );
     } finally {
-      setActionLoading(false);
+      toast.dismiss();
     }
   };
 
@@ -120,20 +121,6 @@ export const Attendance = () => {
       year: "numeric",
     });
   };
-
-  // =====================================================
-  // LOADING
-  // =====================================================
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-        <p className="text-slate-400">
-          Loading attendance...
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-full bg-slate-950 text-slate-100 p-6 md:p-10">

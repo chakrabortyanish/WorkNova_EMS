@@ -11,6 +11,8 @@ export const EmployeeSettings = () => {
   const [profile, setProfile] = useState(null);
   const [preview, setPreview] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
 
@@ -36,6 +38,8 @@ export const EmployeeSettings = () => {
     e.preventDefault();
 
     try {
+      toast.loading("Updating password...");
+
       const response = await axios.patch(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/password`,
         {
@@ -56,8 +60,9 @@ export const EmployeeSettings = () => {
       }
     } catch (error) {
       console.error("Update password error:", error.response?.data || error);
-
       toast.error(error.response?.data?.message || "Failed to update password");
+    } finally{
+      toast.dismiss();
     }
   };
 
@@ -77,6 +82,8 @@ export const EmployeeSettings = () => {
     }
 
     try {
+      toast.loading("Updating profile image...");
+
       const formData = new FormData();
 
       formData.append("profileImage", image);
@@ -116,11 +123,17 @@ export const EmployeeSettings = () => {
       toast.error(
         error.response?.data?.message || "Failed to update profile image",
       );
+    } finally{
+      toast.dismiss();
     }
   };
 
   const fetchProfile = async () => {
     try {
+      if(loading){
+        toast.loading("Fetching profile...");
+      }
+
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile`,
         {
@@ -133,6 +146,9 @@ export const EmployeeSettings = () => {
       setProfile(response.data.employee);
     } catch (error) {
       console.error("Error fetching profile:", error);
+    } finally { 
+      setLoading(false);
+      toast.dismiss();
     }
   };
 
@@ -345,6 +361,7 @@ export const EmployeeSettings = () => {
                   type="password"
                   placeholder="••••••••"
                   value={security.currentPassword}
+                  required
                   onChange={(e) =>
                     setSecurity({
                       ...security,
@@ -363,6 +380,7 @@ export const EmployeeSettings = () => {
                   type="password"
                   placeholder="••••••••"
                   value={security.newPassword}
+                  required
                   onChange={(e) =>
                     setSecurity({ ...security, newPassword: e.target.value })
                   }
@@ -378,6 +396,7 @@ export const EmployeeSettings = () => {
                   type="password"
                   placeholder="••••••••"
                   value={security.confirmPassword}
+                  required
                   onChange={(e) =>
                     setSecurity({
                       ...security,

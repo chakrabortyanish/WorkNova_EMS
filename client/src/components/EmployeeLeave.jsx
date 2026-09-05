@@ -38,8 +38,14 @@ export const EmployeeLeave = () => {
     reason: "",
   });
 
+  const [loading, setLoading] = useState(true);
+
   const fetchMyLeaves = async () => {
     try {
+      if (loading) {
+        toast.loading("Fetching leave history...");
+      }
+
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/leave/my-leaves`,
         {
@@ -52,17 +58,20 @@ export const EmployeeLeave = () => {
 
       setLeaves(response.data.leaves || []);
     } catch (error) {
-      console.error("Failed to fetch leave requests:", error);
+      console.error("Failed to fetch leave history:", error);
 
       toast.error(
-        error.response?.data?.message || "Failed to load leave requests",
+        error.response?.data?.message || "Failed to load leave history",
       );
+    } finally {
+      toast.dismiss();
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchMyLeaves();
-  }, [leaves]);
+  }, []);
 
   // Submit Leave Application
   const handleSubmit = async (e) => {
@@ -109,6 +118,7 @@ export const EmployeeLeave = () => {
         });
 
         toast.success("Leave application submitted successfully");
+        await fetchMyLeaves(); // Refresh leave history
       }
     } catch (error) {
       console.error("Leave application failed:", error);

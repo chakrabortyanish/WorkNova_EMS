@@ -49,7 +49,7 @@ export const AdminPayslips = () => {
 
   const [formData, setFormData] = useState({
     employee: "",
-    month: new Date().getMonth(),
+    month: "",
     year: new Date().getFullYear(),
     basicSalary: "",
     allowances: "",
@@ -175,7 +175,7 @@ export const AdminPayslips = () => {
       // Reset form
       setFormData({
         employee: "",
-        month: new Date().getMonth() + 1,
+        month: "",
         year: new Date().getFullYear(),
         basicSalary: "",
         allowances: "",
