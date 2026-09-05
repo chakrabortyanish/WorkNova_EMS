@@ -2,7 +2,7 @@
 #### A modern Employee Management System (EMS) built using the MERN Stack to manage employees, attendance, leave requests, payslips, profiles, and other employee-related activities.
 
 ### 📌 Project Status: Under Development
-### 🔗 Project Link: https://grovo-grocery-store.vercel.app/
+### 🔗 Project Link: https://work-nova-ems.vercel.app/
 
 ## 🚀 Technologies Used
 
