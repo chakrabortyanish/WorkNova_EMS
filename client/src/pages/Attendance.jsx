@@ -8,6 +8,8 @@ export const Attendance = () => {
   const [todayAttendance, setTodayAttendance] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
   const token = localStorage.getItem("ems-token");
 
   const authConfig = {
@@ -24,7 +26,9 @@ export const Attendance = () => {
 
   const fetchMyAttendance = async () => {
     try {
-      toast.loading("Loading attendance...");
+      if(loading){
+        toast.loading("Loading attendance...");
+      }
 
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/attendance/my-attendance`,
@@ -57,6 +61,7 @@ export const Attendance = () => {
           "Failed to load attendance"
       );
     } finally {
+      setLoading(false)
       toast.dismiss();
     }
   };
