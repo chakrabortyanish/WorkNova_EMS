@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 import {
   Search,
@@ -12,6 +11,9 @@ import {
   CheckCircle2,
   Plus,
 } from "lucide-react";
+
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 import defalut_pic from "../assets/default-picture.png";
 
@@ -71,7 +73,7 @@ export const AdminPayslips = () => {
 
   const fetchPayslips = async () => {
     try {
-      setLoading(true);
+      toast.loading("Loading payslips...");
 
       const response = await axios.get(`${API_URL}/payslip/all`, axiosConfig);
 
@@ -82,7 +84,7 @@ export const AdminPayslips = () => {
 
       alert(error.response?.data?.message || "Failed to fetch payslips");
     } finally {
-      setLoading(false);
+      toast.dismiss();
     }
   };
 
@@ -126,6 +128,8 @@ export const AdminPayslips = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    console.log("vvv: " + e.target.value);
 
     setFormData((prev) => ({
       ...prev,
@@ -406,35 +410,26 @@ export const AdminPayslips = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-800/80 bg-slate-950/60 text-slate-400 text-xs uppercase tracking-wider font-semibold">
-                  <th className="py-3.5 px-6">Employee</th>
+                  <th className="py-3.5 px-2">Employee</th>
 
-                  <th className="py-3.5 px-6">Month</th>
+                  <th className="py-3.5 px-2">Month</th>
 
-                  <th className="py-3.5 px-6">Basic Salary</th>
+                  <th className="py-3.5 px-2">Basic Salary</th>
 
-                  <th className="py-3.5 px-6">Allowances</th>
+                  <th className="py-3.5 px-2">Allowances</th>
 
-                  <th className="py-3.5 px-6">Deductions</th>
+                  <th className="py-3.5 px-2">Deductions</th>
 
-                  <th className="py-3.5 px-6">Net Payable</th>
+                  <th className="py-3.5 px-2">Net Payable</th>
 
-                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-2">Status</th>
 
-                  <th className="py-3.5 px-6 text-right">Actions</th>
+                  <th className="py-3.5 px-2 text-right">Actions</th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-slate-800/60 text-sm">
-                {loading ? (
-                  <tr>
-                    <td
-                      colSpan={8}
-                      className="py-10 text-center text-slate-400"
-                    >
-                      Loading payslips...
-                    </td>
-                  </tr>
-                ) : filteredPayrolls.length > 0 ? (
+                {filteredPayrolls.length > 0 ? (
                   filteredPayrolls.map((pay) => (
                     <tr
                       key={pay._id}
@@ -442,7 +437,7 @@ export const AdminPayslips = () => {
                     >
                       {/* Employee */}
 
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-2">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 overflow-hidden rounded-full bg-gray-50 flex items-center justify-center">
                             <img
@@ -470,37 +465,37 @@ export const AdminPayslips = () => {
 
                       {/* Month */}
 
-                      <td className="py-4 px-6 text-xs text-slate-300">
+                      <td className="py-4 px-2 text-xs text-slate-300">
                         {pay.month}/{pay.year}
                       </td>
 
                       {/* Basic */}
 
-                      <td className="py-4 px-6 text-xs text-slate-300 font-mono">
+                      <td className="py-4 px-2 text-xs text-slate-300 font-mono">
                         {formatCurrency(pay.basicSalary)}
                       </td>
 
                       {/* Allowances */}
 
-                      <td className="py-4 px-6 text-xs text-emerald-400 font-mono">
+                      <td className="py-4 px-2 text-xs text-emerald-400 font-mono">
                         +{formatCurrency(pay.allowances)}
                       </td>
 
                       {/* Deductions */}
 
-                      <td className="py-4 px-6 text-xs text-rose-400 font-mono">
+                      <td className="py-4 px-2 text-xs text-rose-400 font-mono">
                         -{formatCurrency(pay.deductions)}
                       </td>
 
                       {/* Net */}
 
-                      <td className="py-4 px-6 text-xs font-bold text-white font-mono">
+                      <td className="py-4 px-2 text-xs font-bold text-white font-mono">
                         {formatCurrency(pay.netPayable)}
                       </td>
 
                       {/* Status */}
 
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-2">
                         <span
                           className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${
                             pay.status === "Paid"
@@ -522,7 +517,7 @@ export const AdminPayslips = () => {
 
                       {/* Actions */}
 
-                      <td className="py-4 px-6 text-right">
+                      <td className="py-4 px-2 text-right">
                         <div className="flex items-center justify-end gap-2">
                           {/* View */}
 
@@ -600,7 +595,21 @@ export const AdminPayslips = () => {
                 <select
                   name="employee"
                   value={formData.employee}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    const selectedEmp = employees.find(
+                      (emp) => emp._id === e.target.value,
+                    );
+
+                    // 3. If the employee has a salary field, auto-populate it
+                    if (selectedEmp) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        basicSalary:
+                          selectedEmp.basicSalary
+                      }));
+                    }
+                  }}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
                   required
                 >
@@ -804,7 +813,7 @@ export const AdminPayslips = () => {
                 <span className="text-slate-400">Salary Month</span>
 
                 <span className="text-white">
-                  {getMonthName(selectedPayroll.month)} {selectedPayroll.year}
+                  {selectedPayroll.month} {selectedPayroll.year}
                 </span>
               </div>
 

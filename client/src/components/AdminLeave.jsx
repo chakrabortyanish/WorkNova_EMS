@@ -4,70 +4,6 @@ import { Check, X, Search, User } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-// --- Mock Data ---
-const initialLeaveRequests = [
-  {
-    id: "LR-101",
-    employee: "Sarah Jenkins",
-    role: "Senior Frontend Engineer",
-    department: "Engineering",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
-    type: "Sick Leave",
-    startDate: "Aug 10, 2026",
-    endDate: "Aug 12, 2026",
-    days: 3,
-    reason: "Medical treatment and rest prescribed by doctor.",
-    appliedDate: "Aug 04, 2026",
-    status: "Pending",
-  },
-  {
-    id: "LR-102",
-    employee: "Michael Chen",
-    role: "Product Designer",
-    department: "Design & UX",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-    type: "Casual / PTO",
-    startDate: "Aug 15, 2026",
-    endDate: "Aug 18, 2026",
-    days: 4,
-    reason: "Family vacation trip.",
-    appliedDate: "Aug 02, 2026",
-    status: "Pending",
-  },
-  {
-    id: "LR-103",
-    employee: "David Kim",
-    role: "DevOps Specialist",
-    department: "Engineering",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
-    type: "Personal Leave",
-    startDate: "Aug 08, 2026",
-    endDate: "Aug 08, 2026",
-    days: 1,
-    reason: "Personal urgent work at home.",
-    appliedDate: "Aug 01, 2026",
-    status: "Approved",
-  },
-  {
-    id: "LR-104",
-    employee: "Jessica Taylor",
-    role: "HR Manager",
-    department: "Human Resources",
-    avatar:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
-    type: "Casual / PTO",
-    startDate: "Aug 20, 2026",
-    endDate: "Aug 22, 2026",
-    days: 3,
-    reason: "Attending relative wedding ceremony.",
-    appliedDate: "Jul 29, 2026",
-    status: "Rejected",
-  },
-];
-
 export const AdminLeave = () => {
   const [requests, setRequests] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -98,6 +34,8 @@ export const AdminLeave = () => {
 
   const fetchLeaveRequests = async () => {
     try {
+      toast.loading("Fetching leave requests...");
+
       const token = localStorage.getItem("ems-token");
 
       if (!token) {
@@ -123,6 +61,8 @@ export const AdminLeave = () => {
         "Failed to fetch leave requests:",
         error.response?.data || error,
       );
+    } finally {
+      toast.dismiss();
     }
   };
 
