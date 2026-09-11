@@ -107,7 +107,7 @@ export const EmployeeDashboard = () => {
             />
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="capitalize text-2xl md:text-3xl font-extrabold tracking-tight text-white">
+                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
                   Welcome back, {employeeInfo?.fullName.split(" ")[0]}!
                 </h1>
                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">

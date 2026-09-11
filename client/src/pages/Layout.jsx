@@ -120,7 +120,7 @@ export const Layout = () => {
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="capitalize text-sm font-semibold text-slate-100 truncate">
+              <p className="uppercase text-sm font-semibold text-slate-100 truncate">
                 {user?.fullName}
               </p>
               <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">

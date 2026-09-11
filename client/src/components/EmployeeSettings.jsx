@@ -273,7 +273,7 @@ export const EmployeeSettings = () => {
                   </label>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">
+                  <h3 className="uppercase text-base font-bold text-white">
                     {profile?.fullName}
                   </h3>
                   <p className="text-xs text-slate-400">
@@ -292,7 +292,7 @@ export const EmployeeSettings = () => {
                     disabled
                     type="text"
                     value={profile?.fullName}
-                    className={`w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+                    className={`uppercase w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
                   />
                 </div>
                 <div>
