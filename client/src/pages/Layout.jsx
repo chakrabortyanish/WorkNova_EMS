@@ -23,7 +23,7 @@ import { jwtDecode } from "jwt-decode";
 import {useAuth} from "../context/AuthContext.jsx";
 
 export const Layout = () => {
-  const {user, logout, employeeInfo} = useAuth();
+  const {user, logout, employeeInfo, companyInfo} = useAuth();
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
@@ -121,7 +121,7 @@ export const Layout = () => {
 
             <div className="flex-1 min-w-0">
               <p className="uppercase text-sm font-semibold text-slate-100 truncate">
-                {user?.fullName}
+                {companyInfo ? companyInfo.name : (user?.role !== "admin" && user?.fullName)}
               </p>
               <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
                 {user?.role === "admin" ? (

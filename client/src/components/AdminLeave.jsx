@@ -21,7 +21,8 @@ export const AdminLeave = () => {
   } */
 
   // Filter requests
-  /*  const filteredRequests = requests.filter(req => {
+  /*  
+  const filteredRequests = requests.filter(req => {
     const matchesSearch =
       req.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
       req.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -234,12 +235,12 @@ export const AdminLeave = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-800/80 bg-slate-950/60 text-slate-400 text-xs uppercase tracking-wider font-semibold">
-                  <th className="py-3.5 px-6">Employee</th>
-                  <th className="py-3.5 px-6">Leave Type</th>
-                  <th className="py-3.5 px-6">Duration</th>
-                  <th className="py-3.5 px-6">Reason</th>
-                  <th className="py-3.5 px-6">Status</th>
-                  <th className="py-3.5 px-6 text-right">Actions</th>
+                  <th className="py-3.5 px-2">Employee</th>
+                  <th className="py-3.5 px-2">Leave Type</th>
+                  <th className="py-3.5 px-2">Duration</th>
+                  <th className="py-3.5 px-2">Reason</th>
+                  <th className="py-3.5 px-2">Status</th>
+                  <th className="py-3.5 px-2">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-sm">

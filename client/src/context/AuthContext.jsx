@@ -49,12 +49,33 @@ function AuthProvider({ children }) {
       }
     };
 
+    const [companyInfo, setCompanyInfo] = useState();
+    const fetchCompanyProfile = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+            },
+          },
+        );
+        if (res.data.success) {
+          setCompanyInfo(res.data.admin);
+        }
+      } catch (error) {
+        console.error("Error fetching company profile:", error);
+      }
+    };
+
   if(user?.role === "employee"){
     fetchProfile();
+  } else{
+    fetchCompanyProfile()
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, employeeInfo }}>
+    <AuthContext.Provider value={{ user, login, logout, employeeInfo, companyInfo }}>
       {children}
     </AuthContext.Provider>
   );
