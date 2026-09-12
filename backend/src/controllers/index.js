@@ -17,6 +17,21 @@ export {
   updatePassword,
 };
 
+//! for admin controllers
+import {
+  adminSignup,
+  adminLogin,
+  getAdminProfile,
+  updateAdminProfile
+} from "./admin.controller.js";
+
+export {
+  adminSignup,
+  adminLogin,
+  getAdminProfile,
+  updateAdminProfile
+};
+
 //! for attendance controllers
 import {
   checkIn,

@@ -3,7 +3,11 @@ import express from "express";
 import {
   adminSignup,
   adminLogin,
-} from "../controllers/admin.controller.js";
+  getAdminProfile,
+  updateAdminProfile
+} from "../controllers/index.js";
+
+import adminAuth from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
@@ -22,6 +26,18 @@ router.post(
 router.post(
   "/login",
   adminLogin
+);
+
+router.get(
+  "/profile",
+  adminAuth,
+  getAdminProfile
+);
+
+router.put(
+  "/update-profile",
+  adminAuth, 
+  updateAdminProfile
 );
 
 

@@ -228,3 +228,71 @@ export const adminLogin = async (req, res) => {
     });
   }
 };
+
+// Get Admin Profile
+export const getAdminProfile = async (req, res) => {
+  try {
+    const adminId = req.user?.id || req.adminId;
+
+    const admin = await Admin.findById(adminId).select("-password");
+
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: "Admin not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      admin,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update Admin Profile
+export const updateAdminProfile = async (req, res) => {
+  try {
+    const adminId = req.user?.id || req.adminId; 
+    const { name, email } = req.body;
+
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+
+    const updatedAdmin = await Admin.findByIdAndUpdate(
+      adminId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!updatedAdmin) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Admin not found" 
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: updatedAdmin,
+    });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Email is already in use by another account" 
+      });
+    }
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+};
