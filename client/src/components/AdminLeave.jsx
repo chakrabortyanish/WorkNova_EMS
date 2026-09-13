@@ -4,6 +4,8 @@ import { Check, X, Search, User } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
+import defaultProfileImage from "../assets/default-picture.png";
+
 export const AdminLeave = () => {
   const [requests, setRequests] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -253,21 +255,17 @@ export const AdminLeave = () => {
                       {/* Employee info */}
                       <td className="py-4 px-2">
                         <div className="flex items-center gap-3">
-                          {req.employeeId?.profileImage ? (
                             <img
-                              src={req.employeeId.profileImage}
-                              alt={req.employeeId.fullName}
+                              src={req.employeeId?.profileImage || defaultProfileImage}
+                              alt={req.employeeId?.fullName}
                               className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800"
                             />
-                          ) : (
-                            <User color="green"/>
-                          )}
                           <div>
                             <div className="font-semibold text-[12px] text-white">
-                              {req.employeeId.fullName}
+                              {req.employeeId?.fullName}
                             </div>
                             <div className="text-xs text-slate-400">
-                              {req.employeeId.department}
+                              {req.employeeId?.department}
                             </div>
                           </div>
                         </div>
