@@ -20,15 +20,15 @@ import default_pic from "../assets/default-picture.png";
 import logo from "../assets/logo.png";
 import { jwtDecode } from "jwt-decode";
 
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export const Layout = () => {
-  const {user, logout, employeeInfo, companyInfo} = useAuth();
+  const { user, logout, employeeInfo, companyInfo } = useAuth();
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
 
-   if (!localStorage.getItem("ems-token")) {
+  if (!localStorage.getItem("ems-token")) {
     navigate("/");
   }
 
@@ -56,23 +56,31 @@ export const Layout = () => {
 
   const currentNavItems = menuConfig[user?.role] || menuConfig.employee;
 
- 
-
   return (
-    <div className="flex h-screen bg-slate-900 text-slate-100 font-sans antialiased overflow-hidden">
-      {/* Mobile Backdrop */}
-      {/* {isMobileOpen && (
+    <div className="flex h-screen overflow-hidden bg-slate-950 text-slate-100">
+      {/* Mobile Backdrop Overlay */}
+      {isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-md lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-sm lg:hidden transition-opacity duration-300"
         />
-      )} */}
+      )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-slate-950 border-r border-slate-800/80 transition-transform duration-300 ease-out lg:static lg:translate-x-0 ${
-          isMobileOpen ? "translate-x-0 relative" : "-translate-x-full"
-        } overflow-hidden`}
+        className={`
+      fixed inset-y-0 left-0 z-50
+      w-64
+      flex flex-col
+      bg-slate-950
+      border-r border-slate-800
+      transform transition-transform duration-300 ease-in-out
+
+      lg:static
+      lg:translate-x-0
+
+      ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
+    `}
       >
         {/* Animated Background Gradients & Glow Effects */}
         <div className="absolute -top-24 -left-20 w-56 h-56 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
@@ -114,7 +122,17 @@ export const Layout = () => {
           <div className="flex items-center gap-3">
             <div className="relative">
               <div className="w-10 h-10 overflow-hidden rounded-xl bg-white flex items-center justify-center font-bold text-white text-sm shadow-md shadow-indigo-500/20">
-                {user?.role === "admin" ? <div className="w-full h-full flex items-center justify-center bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500">AD</div> : <img className="w-full h-full" src={employeeInfo?.profileImage || default_pic} alt=""/>}
+                {user?.role === "admin" ? (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500">
+                    AD
+                  </div>
+                ) : (
+                  <img
+                    className="w-full h-full"
+                    src={employeeInfo?.profileImage || default_pic}
+                    alt=""
+                  />
+                )}
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
             </div>
@@ -189,7 +207,7 @@ export const Layout = () => {
         {/* Logout Section */}
         <div className="relative z-10 p-4 border-t border-slate-800/60 bg-slate-950/60 backdrop-blur-md">
           <button
-            onClick={()=> logout()}
+            onClick={() => logout()}
             className="w-full cursor-pointer flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20 transition-all duration-200 shadow-sm"
           >
             <LogOut size={18} />
@@ -215,7 +233,7 @@ export const Layout = () => {
         </header>
 
         {/* Dynamic Page Content Outlet */}
-        <main className="flex-1 overflow-y-auto py-2 sm:py-4 lg:py-5 bg-slate-950 text-slate-100">
+        <main className="flex-1 overflow-y-auto py-2 sm:py-4 lg:py-5 bg-slate-950 text-slate-100 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-600 [scrollbar-width:thin] [scrollbar-color:theme(colors.slate.700)_transparent]">
           <Outlet />
         </main>
       </div>
