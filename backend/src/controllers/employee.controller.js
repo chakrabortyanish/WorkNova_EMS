@@ -22,9 +22,7 @@ export const getAllEmployees = async (req, res) => {
   }
 };
 
-// ==========================================
 //! CREATE EMPLOYEE
-// ==========================================
 export const createEmployee = async (req, res) => {
 
   try {
@@ -138,10 +136,87 @@ export const createEmployee = async (req, res) => {
   }
 };
 
-// ==========================================
-//! EMPLOYEE LOGIN
-// ==========================================
+//! EMPLOYEE UPDATE
+export const updateEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = { ...req.body };
 
+    // If password is being updated, hash it first
+    if (updateData.password) {
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(updateData.password, salt);
+      updateData.isPasswordUpdate = true;
+    }
+
+    // If email is being modified, ensure uniqueness
+    if (updateData.email) {
+      const emailExists = await Employee.findOne({
+        email: updateData.email,
+        _id: { $ne: id },
+      });
+      if (emailExists) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is already in use by another employee.",
+        });
+      }
+    }
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    if (!updatedEmployee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Employee updated successfully.",
+      employee: updatedEmployee,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
+//! EMPLOYEE DELETE
+export const deleteEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
+
+    if (!deletedEmployee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Employee deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
+//! EMPLOYEE LOGIN
 export const employeeLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -222,10 +297,7 @@ export const employeeLogin = async (req, res) => {
   }
 };
 
-// ==========================================
 //! GET LOGGED-IN EMPLOYEE
-// ==========================================
-
 export const getEmployeeProfile = async (req, res) => {
   try {
     const employee = await Employee.findById(req.employeeId).select(

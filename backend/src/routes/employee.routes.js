@@ -3,7 +3,9 @@ import express from "express";
 import {
   getAllEmployees,
   createEmployee,
+  updateEmployee,
   employeeLogin,
+  deleteEmployee,
   getEmployeeProfile,
   updateProfileImage,
   updatePassword
@@ -25,8 +27,9 @@ router.post("/login", employeeLogin);
 
 // get all employees
 router.get("/all",adminAuth, getAllEmployees);
-
 router.post("/create",adminAuth, createEmployee);
+router.put("/edit/:id", adminAuth, updateEmployee);
+router.delete("/delete/:id", adminAuth, deleteEmployee);
 
 
 //! EMPLOYEE-PROTECTED ROUTES

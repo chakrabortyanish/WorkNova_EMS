@@ -2,6 +2,8 @@
 import {
   getAllEmployees,
   createEmployee,
+  updateEmployee,
+  deleteEmployee,
   employeeLogin,
   getEmployeeProfile,
   updateProfileImage,
@@ -11,6 +13,8 @@ import {
 export {
   getAllEmployees,
   createEmployee,
+  updateEmployee,
+  deleteEmployee,
   employeeLogin,
   getEmployeeProfile,
   updateProfileImage,
