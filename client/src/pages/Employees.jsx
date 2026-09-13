@@ -14,104 +14,16 @@ import {
   X,
   Check,
   Building,
-  Briefcase,
-  ChevronLeft,
-  ChevronRight,
+  Trash2,
+  Edit,
 } from "lucide-react";
 import { CreateEmployee } from "../components";
 
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { EditEmployee } from "../components/EditEmployee";
 
 import defaultPic from "../assets/default-picture.png";
-
-// --- Fake / Mock Data ---
-const mockEmployeesList = [
-  {
-    id: "EMP-1092",
-    name: "Sarah Jenkins",
-    role: "Senior Frontend Engineer",
-    department: "Engineering",
-    type: "Full-Time",
-    email: "sarah.j@company.com",
-    phone: "+1 (555) 019-2834",
-    location: "San Francisco, CA",
-    status: "Active",
-    joinDate: "Jan 12, 2024",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
-  },
-  {
-    id: "EMP-1093",
-    name: "Michael Chen",
-    role: "Product Designer",
-    department: "Design & UX",
-    type: "Full-Time",
-    email: "michael.c@company.com",
-    phone: "+1 (555) 014-4921",
-    location: "New York, NY",
-    status: "Active",
-    joinDate: "Feb 01, 2024",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-  },
-  {
-    id: "EMP-1094",
-    name: "Elena Rostova",
-    role: "Marketing Lead",
-    department: "Marketing",
-    type: "Full-Time",
-    email: "elena.r@company.com",
-    phone: "+1 (555) 018-9920",
-    location: "London, UK",
-    status: "On Leave",
-    joinDate: "Nov 18, 2023",
-    avatar:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-  },
-  {
-    id: "EMP-1095",
-    name: "David Kim",
-    role: "DevOps Specialist",
-    department: "Engineering",
-    type: "Contract",
-    email: "david.k@company.com",
-    phone: "+1 (555) 012-3811",
-    location: "Seattle, WA",
-    status: "Active",
-    joinDate: "Jan 28, 2024",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
-  },
-  {
-    id: "EMP-1096",
-    name: "Jessica Taylor",
-    role: "HR Business Partner",
-    department: "Human Resources",
-    type: "Full-Time",
-    email: "jessica.t@company.com",
-    phone: "+1 (555) 017-7422",
-    location: "Austin, TX",
-    status: "Onboarding",
-    joinDate: "Feb 05, 2024",
-    avatar:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
-  },
-  {
-    id: "EMP-1097",
-    name: "Marcus Vance",
-    role: "Backend Architect",
-    department: "Engineering",
-    type: "Remote",
-    email: "marcus.v@company.com",
-    phone: "+1 (555) 015-8833",
-    location: "Chicago, IL",
-    status: "Active",
-    joinDate: "Mar 15, 2023",
-    avatar:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150",
-  },
-];
 
 export const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -162,15 +74,46 @@ export const Employees = () => {
   // Filter Employees Logic
   const filteredEmployees = employees.filter((emp) => {
     const matchesSearch =
-      emp.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.designation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.email.toLowerCase().includes(searchTerm.toLowerCase());
+      emp.name?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+      emp.role?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+      emp.email?.toLowerCase().includes(searchTerm?.toLowerCase());
 
     const matchesDept =
       selectedDept === "All" || emp.department === selectedDept;
 
     return matchesSearch && matchesDept;
   });
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+  // Handle Delete Feature
+  const handleDeleteEmployee = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this employee?"))
+      return;
+
+    try {
+      toast.loading("Deleting employee...");
+      const res = await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+          },
+        },
+      );
+
+      if (res.data.success) {
+        toast.success(res.data.message || "Employee deleted successfully");
+        setEmployees((prev) => prev.filter((emp) => emp._id !== id));
+      }
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+      toast.error(error.response?.data?.message || "Failed to delete employee");
+    } finally {
+      toast.dismiss();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
@@ -287,7 +230,7 @@ export const Employees = () => {
                     <th className="py-3.5 px-2">Type</th>
                     <th className="py-3.5 px-2">Location</th>
                     <th className="py-3.5 px-2">Status</th>
-                    <th className="py-3.5 px-2 text-right">Actions</th>
+                    <th className="py-3.5 px-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-sm">
@@ -360,10 +303,26 @@ export const Employees = () => {
                           </span>
                         </td>
 
-                        <td className="py-4 px-2 text-right">
-                          <button className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-                            <MoreVertical className="w-4 h-4" />
-                          </button>
+                        <td className="py-4 px-2">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => {
+                                setSelectedEmployee(emp);
+                                setIsEditModalOpen(true);
+                              }}
+                              className="text-slate-500 hover:text-indigo-400 p-1 rounded transition-colors cursor-pointer"
+                              title="Edit Employee"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteEmployee(emp._id)}
+                              className="text-slate-500 hover:text-rose-400 p-1 rounded transition-colors cursor-pointer"
+                              title="Delete Employee"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -386,22 +345,24 @@ export const Employees = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredEmployees.map((emp) => (
               <div
-               key={emp._id}
+                key={emp._id}
                 className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 hover:border-slate-700 transition-all duration-300 hover:-translate-y-1 shadow-lg relative group flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <img
-                         src={emp.profileImage || defaultPic}
-                              alt={emp.fullName}
+                        src={emp.profileImage || defaultPic}
+                        alt={emp.fullName}
                         className="w-12 h-12 rounded-full object-cover ring-2 ring-indigo-500/30"
                       />
                       <div>
                         <h3 className="font-bold text-white group-hover:text-indigo-400 transition-colors text-base">
                           {emp.fullName}
                         </h3>
-                        <p className="text-xs text-slate-400">{emp.designation}</p>
+                        <p className="text-xs text-slate-400">
+                          {emp.designation}
+                        </p>
                       </div>
                     </div>
                     <button className="text-slate-500 hover:text-white p-1">
@@ -420,7 +381,9 @@ export const Employees = () => {
                     </div>
                     <div className="flex items-center gap-2 text-slate-400">
                       <MapPin className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>{emp.address.city}, {emp.address.country}</span>
+                      <span>
+                        {emp.address.city}, {emp.address.country}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -446,12 +409,19 @@ export const Employees = () => {
                 No employees found matching your filters.
               </div>
             )}
-        </div>
+          </div>
         )}
       </div>
 
       {/* --- Add Employee Modal --- */}
       {isModalOpen && <CreateEmployee setIsModalOpen={setIsModalOpen} />}
+      {isEditModalOpen && (
+        <EditEmployee
+          employee={selectedEmployee}
+          setIsEditModalOpen={setIsEditModalOpen}
+          setEmployees={setEmployees}
+        />
+      )}
     </div>
   );
 };

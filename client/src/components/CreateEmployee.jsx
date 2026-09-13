@@ -32,66 +32,65 @@ export const CreateEmployee = ({ setIsModalOpen }) => {
     }));
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const employeeData = {
-      fullName: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      password: formData.password,
-      gender: formData.gender,
-      dateOfBirth: formData.dateOfBirth,
+    try {
+      const employeeData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        gender: formData.gender,
+        dateOfBirth: formData.dateOfBirth,
 
-      address: {
-        city: formData.city,
-        state: formData.state,
-        country: formData.country,
-        pinCode: formData.pinCode,
-      },
-
-      department: formData.department,
-      designation: formData.designation,
-      employmentType: formData.employmentType,
-      joiningDate: formData.joiningDate,
-      basicSalary: Number(formData.basicSalary),
-    };
-
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/create`,
-      employeeData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+        address: {
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          pinCode: formData.pinCode,
         },
+
+        department: formData.department,
+        designation: formData.designation,
+        employmentType: formData.employmentType,
+        joiningDate: formData.joiningDate,
+        basicSalary: Number(formData.basicSalary),
+      };
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/create`,
+        employeeData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
+          },
+        },
+      );
+
+      console.log("Response:", response.data);
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setIsModalOpen(false);
       }
-    );
+    } catch (error) {
+      console.error("Error creating employee:", error);
 
-    console.log("Response:", response.data);
+      // Backend response
+      console.log("Backend error:", error.response?.data);
 
-    if (response.data.success) {
-      toast.success(response.data.message);
-      setIsModalOpen(false);
+      const message =
+        error.response?.data?.message || "Failed to create employee";
+
+      toast.error(message);
     }
-  } catch (error) {
-    console.error("Error creating employee:", error);
-
-    // Backend response
-    console.log("Backend error:", error.response?.data);
-
-    const message =
-      error.response?.data?.message ||
-      "Failed to create employee";
-
-    toast.error(message);
-  }
-};
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-600 [scrollbar-width:thin] [scrollbar-color:theme(colors.slate.700)_transparent]">
         {/* Close Button */}
         <button
           onClick={() => setIsModalOpen(false)}
