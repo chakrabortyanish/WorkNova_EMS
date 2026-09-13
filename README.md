@@ -4,6 +4,10 @@
 ### 📌 Project Status: Under Development
 ### 🔗 Project Link: https://work-nova-ems.vercel.app/
 
+#### View Employee Dashboard
+     email: johndoe@gmail.com
+     password: 123456
+
 ## 🚀 Technologies Used
 
 ### 💻 Frontend
