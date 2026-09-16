@@ -63,8 +63,6 @@ export default function LoginPage() {
       toast.error(errorMessage, {
         id: toastId,
       });
-    } finally{
-      toast.dismiss(); // Dismiss the loading toast
     }
   };
 
