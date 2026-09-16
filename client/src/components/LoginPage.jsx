@@ -35,6 +35,8 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
+      toast.loading("Logging in...");
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/${
           isAdmin ? "admin" : "employee"
@@ -57,6 +59,8 @@ export default function LoginPage() {
       const errorMessage =
         error.response?.data?.message || "Login failed. Please try again.";
       toast.error(errorMessage);
+    } finally{
+      toast.dismiss(); // Dismiss the loading toast
     }
   };
 
