@@ -34,9 +34,9 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      toast.loading("Logging in...");
+    const toastId = toast.loading("Logging in...");
 
+    try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/${
           isAdmin ? "admin" : "employee"
@@ -46,7 +46,9 @@ export default function LoginPage() {
 
       // console.log(response.data);
       if (response.data.success) {
-        toast.success(response.data.message);
+        toast.success(response.data.message, {
+        id: toastId,
+      });
         login(response.data.token);
 
         setTimeout(() => {
@@ -58,7 +60,9 @@ export default function LoginPage() {
       // Extract the backend error message safely from error.response
       const errorMessage =
         error.response?.data?.message || "Login failed. Please try again.";
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        id: toastId,
+      });
     } finally{
       toast.dismiss(); // Dismiss the loading toast
     }
