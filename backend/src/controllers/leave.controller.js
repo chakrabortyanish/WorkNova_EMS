@@ -1,4 +1,4 @@
-import {Admin, Employee, Leave} from "../models/index.js";
+import { Admin, Employee, Leave } from "../models/index.js";
 
 // =====================================================
 // HELPER
@@ -15,9 +15,7 @@ const calculateTotalDays = (startDate, endDate) => {
 
   const difference = end.getTime() - start.getTime();
 
-  return Math.floor(
-    difference / (1000 * 60 * 60 * 24)
-  ) + 1;
+  return Math.floor(difference / (1000 * 60 * 60 * 24)) + 1;
 };
 
 // =====================================================
@@ -36,27 +34,16 @@ export const applyLeave = async (req, res) => {
       });
     }
 
-    const {
-      leaveType,
-      startDate,
-      endDate,
-      reason,
-    } = req.body;
+    const { leaveType, startDate, endDate, reason } = req.body;
 
     // -------------------------------
     // Validate required fields
     // -------------------------------
 
-    if (
-      !leaveType ||
-      !startDate ||
-      !endDate ||
-      !reason
-    ) {
+    if (!leaveType || !startDate || !endDate || !reason) {
       return res.status(400).json({
         success: false,
-        message:
-          "Leave type, start date, end date and reason are required",
+        message: "Leave type, start date, end date and reason are required",
       });
     }
 
@@ -80,10 +67,7 @@ export const applyLeave = async (req, res) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    if (
-      Number.isNaN(start.getTime()) ||
-      Number.isNaN(end.getTime())
-    ) {
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
       return res.status(400).json({
         success: false,
         message: "Invalid date",
@@ -93,8 +77,7 @@ export const applyLeave = async (req, res) => {
     if (end < start) {
       return res.status(400).json({
         success: false,
-        message:
-          "End date cannot be before start date",
+        message: "End date cannot be before start date",
       });
     }
 
@@ -102,10 +85,7 @@ export const applyLeave = async (req, res) => {
     // Calculate total days
     // -------------------------------
 
-    const totalDays = calculateTotalDays(
-      startDate,
-      endDate
-    );
+    const totalDays = calculateTotalDays(startDate, endDate);
 
     // -------------------------------
     // Check overlapping leave
@@ -184,14 +164,8 @@ export const getMyLeaves = async (req, res) => {
     const leaves = await Leave.find({
       employeeId,
     })
-      .populate(
-        "employeeId",
-        "fullName email department"
-      )
-      .populate(
-        "reviewedBy",
-        "fullName email"
-      )
+      .populate("employeeId", "fullName email department")
+      .populate("reviewedBy", "fullName email")
       .sort({
         createdAt: -1,
       });
@@ -226,14 +200,8 @@ export const getLeaveById = async (req, res) => {
       _id: id,
       employeeId,
     })
-      .populate(
-        "employeeId",
-        "fullName email department"
-      )
-      .populate(
-        "reviewedBy",
-        "fullName email"
-      );
+      .populate("employeeId", "fullName email department")
+      .populate("reviewedBy", "fullName email");
 
     if (!leave) {
       return res.status(404).json({
@@ -282,8 +250,7 @@ export const cancelLeave = async (req, res) => {
     if (leave.status !== "Pending") {
       return res.status(400).json({
         success: false,
-        message:
-          "Only pending leave requests can be cancelled",
+        message: "Only pending leave requests can be cancelled",
       });
     }
 
@@ -316,14 +283,8 @@ export const getAllLeaves = async (req, res) => {
   console.log("getAllLeaves");
   try {
     const leaves = await Leave.find()
-      .populate(
-        "employeeId",
-        "fullName email department role profileImage"
-      )
-      .populate(
-        "reviewedBy",
-        "fullName email"
-      )
+      .populate("employeeId", "fullName email department role profileImage")
+      .populate("reviewedBy", "fullName email")
       .sort({
         createdAt: -1,
       });
@@ -354,10 +315,7 @@ export const getPendingLeaves = async (req, res) => {
     const leaves = await Leave.find({
       status: "Pending",
     })
-      .populate(
-        "employeeId",
-        "fullName email department role profileImage"
-      )
+      .populate("employeeId", "fullName email department role profileImage")
       .sort({
         createdAt: 1,
       });
@@ -387,9 +345,7 @@ export const getEmployeeLeaves = async (req, res) => {
   try {
     const { employeeId } = req.params;
 
-    const employee = await Employee.findById(
-      employeeId
-    );
+    const employee = await Employee.findById(employeeId);
 
     if (!employee) {
       return res.status(404).json({
@@ -401,10 +357,7 @@ export const getEmployeeLeaves = async (req, res) => {
     const leaves = await Leave.find({
       employeeId,
     })
-      .populate(
-        "reviewedBy",
-        "fullName email"
-      )
+      .populate("reviewedBy", "fullName email")
       .sort({
         startDate: -1,
       });
@@ -424,15 +377,11 @@ export const getEmployeeLeaves = async (req, res) => {
       leaves,
     });
   } catch (error) {
-    console.error(
-      "Get employee leaves error:",
-      error
-    );
+    console.error("Get employee leaves error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to fetch employee leave history",
+      message: "Failed to fetch employee leave history",
       error: error.message,
     });
   }
@@ -467,10 +416,19 @@ export const approveLeave = async (req, res) => {
     if (leave.status !== "Pending") {
       return res.status(400).json({
         success: false,
-        message:
-          "Only pending leave requests can be approved",
+        message: "Only pending leave requests can be approved",
       });
     }
+
+     // Find employee
+      const employee = await Employee.findById(leave.employeeId);
+  
+      if (!employee) {
+        return res.status(404).json({
+          success: false,
+          message: "Employee not found",
+        });
+      }
 
     leave.status = "Approved";
     leave.reviewedBy = adminId;
@@ -479,6 +437,36 @@ export const approveLeave = async (req, res) => {
     leave.rejectionReason = "";
 
     await leave.save();
+
+    // Update leave balance
+    if (leave.leaveType === "Paid Time Off") {
+      employee.leaveBalance.paidTimeOff.used += leave.totalDays;
+    }
+
+    if (leave.leaveType === "Sick Leave") {
+      employee.leaveBalance.sickLeave.used += leave.totalDays;
+    }
+
+    if (leave.leaveType === "Personal Leave") {
+      employee.leaveBalance.personalLeave.used += leave.totalDays;
+    }
+
+    // Check if leave is currently active
+    const today = new Date();
+
+    const startDate = new Date(leave.startDate);
+    const endDate = new Date(leave.endDate);
+
+    // Remove time portion
+    today.setHours(0, 0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    if (today >= startDate && today <= endDate) {
+      employee.status = "On Leave";
+    }
+
+    await employee.save();
 
     return res.status(200).json({
       success: true,
@@ -515,7 +503,7 @@ export const rejectLeave = async (req, res) => {
       });
     }
 
-   /*  if (!rejectionReason) {
+    /*  if (!rejectionReason) {
       return res.status(400).json({
         success: false,
         message:
@@ -535,8 +523,7 @@ export const rejectLeave = async (req, res) => {
     if (leave.status !== "Pending") {
       return res.status(400).json({
         success: false,
-        message:
-          "Only pending leave requests can be rejected",
+        message: "Only pending leave requests can be rejected",
       });
     }
 
