@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
@@ -31,56 +31,62 @@ function AuthProvider({ children }) {
 
   const [employeeInfo, setEmployeeInfo] = useState();
   const fetchProfile = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
-            },
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/employee/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
           },
-        );
-        if (res.data.success) {
-          setEmployeeInfo(res.data.employee);
-          // console.log("Employee profile:", res.data.employee);
-        }
-      } catch (error) {
-        console.error("Error fetching employee profile:", error);
+        },
+      );
+      if (res.data.success) {
+        setEmployeeInfo(res.data.employee);
+        // console.log("Employee profile:", res.data.employee);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching employee profile:", error);
+    }
+  };
 
-    const [companyInfo, setCompanyInfo] = useState();
-    const fetchCompanyProfile = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
-            },
+  const [companyInfo, setCompanyInfo] = useState();
+  const fetchCompanyProfile = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
           },
-        );
-        if (res.data.success) {
-          setCompanyInfo(res.data.admin);
-        }
-      } catch (error) {
-        console.error("Error fetching company profile:", error);
+        },
+      );
+      if (res.data.success) {
+        setCompanyInfo(res.data.admin);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching company profile:", error);
+    }
+  };
 
-  if(user?.role === "employee"){
-    fetchProfile();
-  } else{
-    fetchCompanyProfile()
-  }
+  useEffect(() => {
+    if (!user) return;
+
+    if (user.role === "employee") {
+      fetchProfile();
+    } else {
+      fetchCompanyProfile();
+    }
+  }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, employeeInfo, companyInfo }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, employeeInfo, companyInfo, fetchProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
- const useAuth = () => useContext(AuthContext);
+const useAuth = () => useContext(AuthContext);
 
- export { AuthProvider, useAuth };
+export { AuthProvider, useAuth };
