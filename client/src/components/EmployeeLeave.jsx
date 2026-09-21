@@ -4,32 +4,41 @@ import { Calendar, Send } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-// --- Mock Data ---
-const leaveBalances = [
-  {
-    type: "Paid Time Off (PTO)",
-    total: 18,
-    used: 6,
-    remaining: 12,
-    color: "bg-indigo-500",
-  },
-  {
-    type: "Sick Leave",
-    total: 10,
-    used: 2,
-    remaining: 8,
-    color: "bg-emerald-500",
-  },
-  {
-    type: "Personal Leave",
-    total: 5,
-    used: 1,
-    remaining: 4,
-    color: "bg-purple-500",
-  },
-];
+import {useAuth} from "../context/AuthContext.jsx";
 
 export const EmployeeLeave = () => {
+  const {employeeInfo, fetchProfile} = useAuth();
+  
+  const leaveBalances = [
+    {
+      type: "Paid Time Off (PTO)",
+      total: employeeInfo?.leaveBalance?.paidTimeOff?.total || 18,
+      used: employeeInfo?.leaveBalance?.paidTimeOff?.used || 0,
+      remaining:
+        employeeInfo?.leaveBalance?.paidTimeOff?.total -
+          employeeInfo?.leaveBalance?.paidTimeOff?.used || 0,
+      color: "bg-indigo-500",
+    },
+    {
+      type: "Sick Leave",
+      total: employeeInfo?.leaveBalance?.sickLeave?.total || 10,
+      used: employeeInfo?.leaveBalance?.sickLeave?.used || 0,
+      remaining:
+        employeeInfo?.leaveBalance?.sickLeave?.total -
+          employeeInfo?.leaveBalance?.sickLeave?.used || 0,
+      color: "bg-emerald-500",
+    },
+    {
+      type: "Personal Leave",
+      total: employeeInfo?.leaveBalance?.personalLeave?.total || 5,
+      used: employeeInfo?.leaveBalance?.personalLeave?.used || 0,
+      remaining:
+        employeeInfo?.leaveBalance?.personalLeave?.total -
+          employeeInfo?.leaveBalance?.personalLeave?.used || 0,
+      color: "bg-purple-500",
+    },
+  ];
+
   const [leaves, setLeaves] = useState([]);
   const [formData, setFormData] = useState({
     type: "Paid Time Off (PTO)",
@@ -71,6 +80,7 @@ export const EmployeeLeave = () => {
 
   useEffect(() => {
     fetchMyLeaves();
+    fetchProfile();
   }, []);
 
   // Submit Leave Application
@@ -106,7 +116,7 @@ export const EmployeeLeave = () => {
         },
       );
 
-      console.log(response.data);
+      // console.log(response.data);
 
       if (response.data.success) {
         // reset form

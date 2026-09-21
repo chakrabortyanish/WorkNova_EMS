@@ -35,9 +35,12 @@ export const AdminLeave = () => {
     return matchesSearch && matchesStatus;
   }); */
 
+  const [loading, setLoading] = useState(true);
   const fetchLeaveRequests = async () => {
     try {
-      toast.loading("Fetching leave requests...");
+      if (loading) {
+        toast.loading("Fetching leave requests...");
+      }
 
       const token = localStorage.getItem("ems-token");
 
@@ -66,6 +69,7 @@ export const AdminLeave = () => {
       );
     } finally {
       toast.dismiss();
+       setLoading(false);
     }
   };
 
@@ -255,11 +259,14 @@ export const AdminLeave = () => {
                       {/* Employee info */}
                       <td className="py-4 px-2">
                         <div className="flex items-center gap-3">
-                            <img
-                              src={req.employeeId?.profileImage || defaultProfileImage}
-                              alt={req.employeeId?.fullName}
-                              className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800"
-                            />
+                          <img
+                            src={
+                              req.employeeId?.profileImage ||
+                              defaultProfileImage
+                            }
+                            alt={req.employeeId?.fullName}
+                            className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-800"
+                          />
                           <div>
                             <div className="font-semibold text-[12px] text-white">
                               {req.employeeId?.fullName}

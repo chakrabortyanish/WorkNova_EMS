@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import {
   Calendar,
   DollarSign,
@@ -6,92 +5,42 @@ import {
   Sparkles,
   User,
   Briefcase,
-  Play,
-  Square,
 } from "lucide-react";
 
 import default_pic from "../assets/default-picture.png";
-
-import axios from "axios";
-import { toast } from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
 
 import {useAuth} from "../context/AuthContext.jsx";
 
-const mockLeaveBalances = [
+export const EmployeeDashboard = () => {
+  const navigate = useNavigate();
+
+  const {employeeInfo} = useAuth();
+
+  const mockLeaveBalances = [
   {
     type: "Paid Time Off (PTO)",
-    used: 6,
-    total: 18,
+    used: employeeInfo?.leaveBalance?.paidTimeOff?.used || 0,
+    total: employeeInfo?.leaveBalance?.paidTimeOff?.total || 18,
     color: "from-blue-500 to-indigo-600",
     barColor: "bg-indigo-500",
   },
   {
     type: "Sick Leave",
-    used: 2,
-    total: 10,
+    used: employeeInfo?.leaveBalance?.sickLeave?.used || 0,
+    total: employeeInfo?.leaveBalance?.sickLeave?.total || 10,
     color: "from-emerald-500 to-teal-600",
     barColor: "bg-emerald-500",
   },
   {
     type: "Personal Leave",
-    used: 1,
-    total: 5,
+    used: employeeInfo?.leaveBalance?.personalLeave?.used || 0,
+    total: employeeInfo?.leaveBalance?.personalLeave?.total || 5,
     color: "from-purple-500 to-pink-600",
     barColor: "bg-purple-500",
   },
 ];
-
-export const EmployeeDashboard = () => {
-  const navigate = useNavigate();
-
-  const [isPunchedIn, setIsPunchedIn] = useState(false);
-
-  const {employeeInfo} = useAuth();
-
-
-  const handleCheckIn = async () => {
-    setIsPunchedIn(true);
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/attendance/check-in`,
-        {},
-         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-      toast.success("Check-in successful!");
-    } catch (error) {
-      console.error("Check-in failed:", error);
-      toast.error("Check-in failed. Please try again.");
-    }
-  };
-
-  const handleCheckOut = async () => {
-    setIsPunchedIn(false);
-    try {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/attendance/check-out`,
-        {},
-         {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("ems-token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-      );
-      console.log(response.data);
-      toast.success("Check-out successful!");
-    } catch (error) {
-      console.error("Check-out failed:", error);
-      toast.error("Check-out failed. Please try again.");
-    }
-  };
 
   // Toggle task completion state
   return (
